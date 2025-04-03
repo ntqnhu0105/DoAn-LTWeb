@@ -8,7 +8,7 @@ namespace QLTCCN.Models.Data
         [Key]
         public int MaTaiKhoan { get; set; }
 
-        public int MaNguoiDung { get; set; }
+        public string MaNguoiDung { get; set; }
 
         [Required]
         [StringLength(50)]

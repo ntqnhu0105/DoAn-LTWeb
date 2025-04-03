@@ -8,7 +8,7 @@ namespace QLTCCN.Models.Data
         [Key]
         public int MaNo { get; set; }
 
-        public int MaNguoiDung { get; set; }
+        public string MaNguoiDung { get; set; }
 
         [Required]
         [Range(0.01, double.MaxValue)]

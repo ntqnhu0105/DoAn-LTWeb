@@ -8,7 +8,7 @@ namespace QLTCCN.Models.Data
         [Key]
         public int MaDauTu { get; set; }
 
-        public int MaNguoiDung { get; set; }
+        public string MaNguoiDung { get; set; }
 
         public int MaLoaiDauTu { get; set; }
 

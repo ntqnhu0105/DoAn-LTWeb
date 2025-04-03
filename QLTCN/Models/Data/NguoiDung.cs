@@ -6,7 +6,7 @@ namespace QLTCCN.Models.Data
     public class NguoiDung
     {
         [Key]
-        public int MaNguoiDung { get; set; }
+        public string MaNguoiDung { get; set; }
 
         [Required]
         [StringLength(50)]
