@@ -2,6 +2,7 @@
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using QLTCCN.Models.Data;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     var cultureInfo = new CultureInfo("vi-VN"); // Định dạng Việt Nam
@@ -30,6 +41,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseRequestLocalization();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
