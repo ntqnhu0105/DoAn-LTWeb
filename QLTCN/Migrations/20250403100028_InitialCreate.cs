@@ -30,6 +30,7 @@ namespace QLTCCN.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -81,8 +82,7 @@ namespace QLTCCN.Migrations
                 name: "NguoiDung",
                 columns: table => new
                 {
-                    MaNguoiDung = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MaNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TenDangNhap = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     MatKhau = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     HoTen = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -206,7 +206,7 @@ namespace QLTCCN.Migrations
                 {
                     MaDauTu = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaNguoiDung = table.Column<int>(type: "int", nullable: false),
+                    MaNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MaLoaiDauTu = table.Column<int>(type: "int", nullable: false),
                     GiaTri = table.Column<decimal>(type: "decimal(15,2)", nullable: false),
                     GiaTriHienTai = table.Column<decimal>(type: "decimal(15,2)", nullable: false),
@@ -238,7 +238,7 @@ namespace QLTCCN.Migrations
                 {
                     MaMucTieu = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaNguoiDung = table.Column<int>(type: "int", nullable: false),
+                    MaNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MaDanhMuc = table.Column<int>(type: "int", nullable: false),
                     TenMucTieu = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     SoTienMucTieu = table.Column<decimal>(type: "decimal(15,2)", nullable: false),
@@ -271,7 +271,7 @@ namespace QLTCCN.Migrations
                 {
                     MaNo = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaNguoiDung = table.Column<int>(type: "int", nullable: false),
+                    MaNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SoTien = table.Column<decimal>(type: "decimal(15,2)", nullable: false),
                     LaiSuat = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     KyHan = table.Column<int>(type: "int", nullable: false),
@@ -298,7 +298,7 @@ namespace QLTCCN.Migrations
                 {
                     MaTaiKhoan = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaNguoiDung = table.Column<int>(type: "int", nullable: false),
+                    MaNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TenTaiKhoan = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     SoDu = table.Column<decimal>(type: "decimal(15,2)", nullable: false),
                     LoaiTaiKhoan = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
@@ -321,7 +321,7 @@ namespace QLTCCN.Migrations
                 {
                     MaThongBao = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaNguoiDung = table.Column<int>(type: "int", nullable: false),
+                    MaNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     NoiDung = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Ngay = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DaDoc = table.Column<bool>(type: "bit", nullable: false),
@@ -367,7 +367,7 @@ namespace QLTCCN.Migrations
                 {
                     MaGiaoDich = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MaNguoiDung = table.Column<int>(type: "int", nullable: false),
+                    MaNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MaTaiKhoan = table.Column<int>(type: "int", nullable: false),
                     MaDanhMuc = table.Column<int>(type: "int", nullable: false),
                     SoTien = table.Column<decimal>(type: "decimal(15,2)", nullable: false),

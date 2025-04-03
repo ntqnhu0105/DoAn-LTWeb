@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using QLTCCN.Models.Data;
 
 namespace QLTCCN.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -21,14 +22,22 @@ namespace QLTCCN.Controllers
             return View();
         }
 
-        // POST: Register
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(string email, string password)
+        public async Task<IActionResult> Register(string email, string password, string fullName, string phoneNumber, string userName = null)
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = email, Email = email };
+                // Nếu không truyền userName, có thể tạo mặc định (ví dụ: từ fullName hoặc email)
+                var finalUserName = string.IsNullOrEmpty(userName) ? fullName.Replace(" ", "").ToLower() : userName;
+
+                var user = new ApplicationUser
+                {
+                    UserName = finalUserName, // Gán UserName riêng biệt
+                    FullName = fullName,
+                    PhoneNumber = phoneNumber,
+                    Email = email
+                };
                 var result = await _userManager.CreateAsync(user, password);
 
                 if (result.Succeeded)
