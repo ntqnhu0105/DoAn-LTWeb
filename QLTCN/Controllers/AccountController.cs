@@ -67,12 +67,21 @@ namespace QLTCCN.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(email, password, false, lockoutOnFailure: false);
+                // Tìm người dùng dựa trên email
+                var user = await _userManager.FindByEmailAsync(email);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Email không tồn tại.");
+                    return View();
+                }
+
+                // Đăng nhập bằng UserName của người dùng
+                var result = await _signInManager.PasswordSignInAsync(user.UserName, password, false, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError(string.Empty, "Đăng nhập không thành công.");
+                ModelState.AddModelError(string.Empty, "Mật khẩu không đúng.");
             }
             return View();
         }

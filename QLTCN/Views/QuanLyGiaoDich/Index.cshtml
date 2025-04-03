@@ -1,14 +1,19 @@
 ﻿@model List<QLTCCN.Models.Data.GiaoDich>
 
+@{
+    ViewData["Title"] = "Danh sách giao dịch";
+}
+
 <h2>Danh sách giao dịch</h2>
-<table class="table">
+
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Ngày</th>
             <th>Danh mục</th>
             <th>Số tiền</th>
             <th>Tài khoản</th>
-            <th>Loại</th>
+            <th>Loại giao dịch</th>
             <th>Ghi chú</th>
             <th>Hành động</th>
         </tr>
@@ -16,19 +21,20 @@
     <tbody>
         @foreach (var item in Model)
         {
-                <tr>
-                    <td>@item.NgayGiaoDich.ToString("dd/MM/yyyy")</td>
-                    <td>@item.DanhMuc.TenDanhMuc</td>
-                    <td>@item.SoTien.ToString("N0")</td>
-                    <td>@item.TaiKhoan.TenTaiKhoan</td>
-                    <td>@item.LoaiGiaoDich</td>
-                    <td>@item.GhiChu</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.MaGiaoDich" class="btn btn-warning">Sửa</a>
-                        <a asp-action="Delete" asp-route-id="@item.MaGiaoDich" class="btn btn-danger">Xóa</a>
-                    </td>
-                </tr>
-        }
-    </tbody>
+            <tr>
+                <td>@item.NgayGiaoDich.ToString("dd/MM/yyyy")</td>
+                <td>@item.DanhMuc.TenDanhMuc</td>
+                <td>@Html.DisplayFor(modelItem => item.SoTien)</td> <!-- Sử dụng DisplayFor -->
+                <td>@item.TaiKhoan.TenTaiKhoan</td>
+                <td>@item.LoaiGiaoDich</td>
+                <td>@item.GhiChu</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MaGiaoDich" class="btn btn-sm btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.MaGiaoDich" class="btn btn-sm btn-danger">Xóa</a>
+                </td>
+            </tr>
+		}
+        </tbody>
 </table>
-<a asp-action="Create" class="btn btn-primary">Thêm giao dịch</a>
+
+<a asp-action="Create" class="btn btn-primary">Thêm giao dịch mới</a>

@@ -1,0 +1,75 @@
+﻿@model QLTCCN.Models.Data.GiaoDich
+
+@{
+    ViewData["Title"] = "Sửa giao dịch";
+}
+
+<h2>Sửa giao dịch</h2>
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="MaGiaoDich" />
+
+    <div class="form-group">
+        <label asp-for="MaDanhMuc" class="control-label">Danh mục</label>
+        <select asp-for="MaDanhMuc" class="form-control">
+            <option value="">Chọn danh mục</option>
+            @foreach (var danhMuc in ViewBag.DanhMuc)
+            {
+                    <option value="@danhMuc.MaDanhMuc" selected="@(danhMuc.MaDanhMuc == Model.MaDanhMuc)">@danhMuc.TenDanhMuc</option>
+            }
+        </select>
+        <span asp-validation-for="MaDanhMuc" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="MaTaiKhoan" class="control-label">Tài khoản</label>
+        <select asp-for="MaTaiKhoan" class="form-control">
+            <option value="">Chọn tài khoản</option>
+            @foreach (var taiKhoan in ViewBag.TaiKhoan)
+            {
+                    <option value="@taiKhoan.MaTaiKhoan" selected="@(taiKhoan.MaTaiKhoan == Model.MaTaiKhoan)">@taiKhoan.TenTaiKhoan</option>
+            }
+        </select>
+        <span asp-validation-for="MaTaiKhoan" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SoTien" class="control-label">Số tiền</label>
+        <input asp-for="SoTien" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="SoTien" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="LoaiGiaoDich" class="control-label">Loại giao dịch</label>
+        <select asp-for="LoaiGiaoDich" class="form-control">
+            <option value="">Chọn loại</option>
+            <option value="ThuNhap" selected="@(Model.LoaiGiaoDich == "ThuNhap")">Thu nhập</option>
+            <option value="ChiTieu" selected="@(Model.LoaiGiaoDich == "ChiTieu")">Chi tiêu</option>
+        </select>
+        <span asp-validation-for="LoaiGiaoDich" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NgayGiaoDich" class="control-label">Ngày giao dịch</label>
+        <input asp-for="NgayGiaoDich" class="form-control" type="date" value="@Model.NgayGiaoDich.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="NgayGiaoDich" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="GhiChu" class="control-label">Ghi chú</label>
+        <input asp-for="GhiChu" class="form-control" />
+        <span asp-validation-for="GhiChu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
