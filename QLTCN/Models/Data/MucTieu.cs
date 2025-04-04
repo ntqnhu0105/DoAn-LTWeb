@@ -31,7 +31,7 @@ namespace QLTCCN.Models.Data
         public DateTime HanChot { get; set; }
 
         [StringLength(20)]
-        public string TrangThai { get; set; } // "Đang thực hiện", "Hoàn thành", "Thất bại"
+        public string TrangThai { get; set; } = "DangTienHanh"; // "Đang thực hiện", "Hoàn thành", "Thất bại"
 
         [StringLength(200)]
         public string GhiChu { get; set; }
@@ -39,7 +39,7 @@ namespace QLTCCN.Models.Data
         public DateTime NgayTao { get; set; } = DateTime.Now;
 
         // Navigation properties
-        public NguoiDung NguoiDung { get; set; }
+        public ApplicationUser NguoiDung { get; set; }
         public DanhMuc DanhMuc { get; set; }
     }
 }

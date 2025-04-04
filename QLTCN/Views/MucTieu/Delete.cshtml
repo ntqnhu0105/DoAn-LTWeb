@@ -1,0 +1,36 @@
+﻿@model QLTCCN.Models.Data.MucTieu
+
+@{
+    ViewData["Title"] = "Xóa mục tiêu";
+}
+
+<h2>Xóa mục tiêu</h2>
+
+<h3>Bạn có chắc muốn xóa mục tiêu này?</h3>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Tên mục tiêu</dt>
+        <dd class="col-sm-10">@Model.TenMucTieu</dd>
+
+        <dt class="col-sm-2">Danh mục</dt>
+        <dd class="col-sm-10">@Model.DanhMuc.TenDanhMuc</dd>
+
+        <dt class="col-sm-2">Số tiền mục tiêu</dt>
+        <dd class="col-sm-10">@Model.SoTienMucTieu.ToString("C") VNĐ</dd>
+
+        <dt class="col-sm-2">Số tiền hiện tại</dt>
+        <dd class="col-sm-10">@Model.SoTienHienTai.ToString("C") VNĐ</dd>
+
+        <dt class="col-sm-2">Hạn chót</dt>
+        <dd class="col-sm-10">@Model.HanChot.ToString("dd/MM/yyyy")</dd>
+
+        <dt class="col-sm-2">Ghi chú</dt>
+        <dd class="col-sm-10">@Model.GhiChu</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="MaMucTieu" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
