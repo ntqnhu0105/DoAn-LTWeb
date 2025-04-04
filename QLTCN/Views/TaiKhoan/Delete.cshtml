@@ -1,0 +1,23 @@
+﻿@model QLTCCN.Models.Data.TaiKhoan
+
+<h2>Xóa tài khoản</h2>
+<h3>Bạn có chắc muốn xóa tài khoản này?</h3>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Tên tài khoản</dt>
+        <dd class="col-sm-10">@Model.TenTaiKhoan</dd>
+        <dt class="col-sm-2">Số dư</dt>
+        <dd class="col-sm-10">@Model.SoDu.ToString("C")</dd>
+        <dt class="col-sm-2">Loại tài khoản</dt>
+        <dd class="col-sm-10">@Model.LoaiTaiKhoan</dd>
+        <dt class="col-sm-2">Ngày tạo</dt>
+        <dd class="col-sm-10">@Model.NgayTao.ToString("dd/MM/yyyy")</dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="MaTaiKhoan" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

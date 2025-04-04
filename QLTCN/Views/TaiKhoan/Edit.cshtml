@@ -1,0 +1,34 @@
+﻿@model QLTCCN.Models.Data.TaiKhoan
+
+<h2>Chỉnh sửa tài khoản</h2>
+
+<form asp-action="Edit">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="MaTaiKhoan" />
+
+    <div class="form-group">
+        <label asp-for="TenTaiKhoan">Tên tài khoản</label>
+        <input asp-for="TenTaiKhoan" class="form-control" required />
+        <span asp-validation-for="TenTaiKhoan" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SoDu">Số dư (VNĐ)</label>
+        <input asp-for="SoDu" class="form-control" type="number" step="0.01" min="0" />
+        <span asp-validation-for="SoDu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="LoaiTaiKhoan">Loại tài khoản</label>
+        <select asp-for="LoaiTaiKhoan" class="form-control" asp-items="ViewBag.LoaiTaiKhoan" required>
+            <option value="">Chọn loại tài khoản</option>
+        </select>
+        <span asp-validation-for="LoaiTaiKhoan" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Lưu</button>
+</form>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+}

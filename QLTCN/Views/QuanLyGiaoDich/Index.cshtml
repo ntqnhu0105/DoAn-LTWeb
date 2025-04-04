@@ -1,34 +1,37 @@
-﻿@model List<QLTCCN.Models.Data.GiaoDich>
+﻿@model IEnumerable<QLTCCN.Models.Data.GiaoDich>
 
 <h2>Danh sách giao dịch</h2>
+<p><a asp-action="Create" class="btn btn-primary">Thêm giao dịch mới</a></p>
+
 <table class="table">
     <thead>
         <tr>
-            <th>Ngày</th>
-            <th>Danh mục</th>
             <th>Số tiền</th>
-            <th>Tài khoản</th>
             <th>Loại</th>
+            <th>Ngày</th>
+            <th>Tài khoản</th>
+            <th>Loại tài khoản</th>
+            <th>Danh mục</th>
             <th>Ghi chú</th>
-            <th>Hành động</th>
+            <th>Thao tác</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-                <tr>
-                    <td>@item.NgayGiaoDich.ToString("dd/MM/yyyy")</td>
-                    <td>@item.DanhMuc.TenDanhMuc</td>
-                    <td>@item.SoTien.ToString("N0")</td>
-                    <td>@item.TaiKhoan.TenTaiKhoan</td>
-                    <td>@item.LoaiGiaoDich</td>
-                    <td>@item.GhiChu</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.MaGiaoDich" class="btn btn-warning">Sửa</a>
-                        <a asp-action="Delete" asp-route-id="@item.MaGiaoDich" class="btn btn-danger">Xóa</a>
-                    </td>
-                </tr>
+            <tr>
+                <td>@item.SoTien.ToString("C")</td>
+                <td>@item.LoaiGiaoDich</td>
+                <td>@item.NgayGiaoDich.ToString("dd/MM/yyyy")</td>
+                <td>@(item.TaiKhoan != null ? item.TaiKhoan.TenTaiKhoan : "Không có")</td>
+                <td>@(item.TaiKhoan != null ? item.TaiKhoan.LoaiTaiKhoan : "Không có")</td>
+                <td>@(item.DanhMuc != null ? item.DanhMuc.TenDanhMuc : "Không có")</td>
+                <td>@item.GhiChu</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MaGiaoDich">Sửa</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MaGiaoDich">Xóa</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
-<a asp-action="Create" class="btn btn-primary">Thêm giao dịch</a>

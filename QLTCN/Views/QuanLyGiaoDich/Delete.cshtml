@@ -1,0 +1,29 @@
+﻿@model QLTCCN.Models.Data.GiaoDich
+
+<h2>Xóa giao dịch</h2>
+<h3>Bạn có chắc muốn xóa giao dịch này?</h3>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Số tiền</dt>
+        <dd class="col-sm-10">@Model.SoTien.ToString("C")</dd>
+        <dt class="col-sm-2">Loại</dt>
+        <dd class="col-sm-10">@Model.LoaiGiaoDich</dd>
+        <dt class="col-sm-2">Ngày</dt>
+        <dd class="col-sm-10">@Model.NgayGiaoDich.ToString("dd/MM/yyyy")</dd>
+        <dt class="col-sm-2">Tài khoản</dt>
+        <dd class="col-sm-10">@Model.TaiKhoan.TenTaiKhoan</dd>
+        <dt class="col-sm-2">Loại tài khoản</dt>
+        <dd class="col-sm-10">@Model.TaiKhoan.LoaiTaiKhoan</dd>
+        <dt class="col-sm-2">Danh mục</dt>
+        <dd class="col-sm-10">@Model.DanhMuc.TenDanhMuc</dd>
+        <dt class="col-sm-2">Ghi chú</dt>
+        <dd class="col-sm-10">@Model.GhiChu</dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="MaGiaoDich" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

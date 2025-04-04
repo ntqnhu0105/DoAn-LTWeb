@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+using QLTCCN.Models.Data;
 namespace QLTCCN.Models.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -25,6 +25,10 @@ namespace QLTCCN.Models.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<GiaoDich>()
+                .HasOne(g => g.DanhMuc)
+                .WithMany() // Nếu DanhMuc không có List<GiaoDich>, để trống
+                .HasForeignKey(g => g.MaDanhMuc);
             // Cấu hình mối quan hệ GiaoDich - TaiKhoan
             modelBuilder.Entity<GiaoDich>()
                 .HasOne(g => g.TaiKhoan)

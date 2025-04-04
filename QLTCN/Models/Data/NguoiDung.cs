@@ -1,5 +1,6 @@
 ﻿using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QLTCCN.Models.Data
 {
@@ -11,10 +12,6 @@ namespace QLTCCN.Models.Data
         [Required]
         [StringLength(50)]
         public string TenDangNhap { get; set; }
-
-        [Required]
-        [StringLength(100)]
-        public string MatKhau { get; set; } // Nên mã hóa trước khi lưu
 
         [Required]
         [StringLength(100)]
