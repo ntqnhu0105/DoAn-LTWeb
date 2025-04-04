@@ -12,8 +12,8 @@ using QLTCCN.Models.Data;
 namespace QLTCCN.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250403160017_Update")]
-    partial class Update
+    [Migration("20250404102134_UpdateBaoCao")]
+    partial class UpdateBaoCao
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -227,6 +227,55 @@ namespace QLTCCN.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("QLTCCN.Models.Data.BaoCao", b =>
+                {
+                    b.Property<int>("MaBaoCao")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaBaoCao"));
+
+                    b.Property<string>("GhiChu")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("MaNguoiDung")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Nam")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("NgayTao")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<decimal>("SoTienTietKiem")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(15,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<int>("Thang")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TongChiTieu")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(15,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<decimal>("TongThuNhap")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(15,2)")
+                        .HasDefaultValue(0m);
+
+                    b.HasKey("MaBaoCao");
+
+                    b.HasIndex("MaNguoiDung");
+
+                    b.ToTable("BaoCao");
+                });
+
             modelBuilder.Entity("QLTCCN.Models.Data.DanhMuc", b =>
                 {
                     b.Property<int>("MaDanhMuc")
@@ -263,9 +312,6 @@ namespace QLTCCN.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaDauTu"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("GhiChu")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -290,6 +336,9 @@ namespace QLTCCN.Migrations
                     b.Property<DateTime?>("NgayKetThuc")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NguoiDungMaNguoiDung")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("TrangThai")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -297,11 +346,11 @@ namespace QLTCCN.Migrations
 
                     b.HasKey("MaDauTu");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("MaLoaiDauTu");
 
                     b.HasIndex("MaNguoiDung");
+
+                    b.HasIndex("NguoiDungMaNguoiDung");
 
                     b.ToTable("DauTu");
                 });
@@ -314,10 +363,7 @@ namespace QLTCCN.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaGiaoDich"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DanhMucMaDanhMuc")
+                    b.Property<int?>("DanhMucMaDanhMuc")
                         .HasColumnType("int");
 
                     b.Property<string>("GhiChu")
@@ -343,18 +389,23 @@ namespace QLTCCN.Migrations
                     b.Property<DateTime>("NgayGiaoDich")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NguoiDungMaNguoiDung")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<decimal>("SoTien")
                         .HasColumnType("decimal(15,2)");
 
                     b.HasKey("MaGiaoDich");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("DanhMucMaDanhMuc");
+
+                    b.HasIndex("MaDanhMuc");
 
                     b.HasIndex("MaNguoiDung");
 
                     b.HasIndex("MaTaiKhoan");
+
+                    b.HasIndex("NguoiDungMaNguoiDung");
 
                     b.ToTable("GiaoDich");
                 });
@@ -414,9 +465,6 @@ namespace QLTCCN.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaMucTieu"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("GhiChu")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -434,6 +482,9 @@ namespace QLTCCN.Migrations
 
                     b.Property<DateTime>("NgayTao")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("NguoiDungMaNguoiDung")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("SoTienHienTai")
                         .HasColumnType("decimal(15,2)");
@@ -453,11 +504,11 @@ namespace QLTCCN.Migrations
 
                     b.HasKey("MaMucTieu");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("MaDanhMuc");
 
                     b.HasIndex("MaNguoiDung");
+
+                    b.HasIndex("NguoiDungMaNguoiDung");
 
                     b.ToTable("MucTieu");
                 });
@@ -498,9 +549,6 @@ namespace QLTCCN.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaNo"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("GhiChu")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -525,6 +573,9 @@ namespace QLTCCN.Migrations
                     b.Property<DateTime?>("NgayTraTiepTheo")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NguoiDungMaNguoiDung")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<decimal>("SoTien")
                         .HasColumnType("decimal(15,2)");
 
@@ -535,9 +586,9 @@ namespace QLTCCN.Migrations
 
                     b.HasKey("MaNo");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("MaNguoiDung");
+
+                    b.HasIndex("NguoiDungMaNguoiDung");
 
                     b.ToTable("NoKhoanVay");
                 });
@@ -590,9 +641,6 @@ namespace QLTCCN.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaThongBao"));
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<bool>("DaDoc")
                         .HasColumnType("bit");
 
@@ -611,6 +659,9 @@ namespace QLTCCN.Migrations
                     b.Property<DateTime>("Ngay")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("NguoiDungMaNguoiDung")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("NoiDung")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -618,9 +669,9 @@ namespace QLTCCN.Migrations
 
                     b.HasKey("MaThongBao");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("MaNguoiDung");
+
+                    b.HasIndex("NguoiDungMaNguoiDung");
 
                     b.ToTable("ThongBao");
                 });
@@ -676,6 +727,17 @@ namespace QLTCCN.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("QLTCCN.Models.Data.BaoCao", b =>
+                {
+                    b.HasOne("QLTCCN.Models.Data.ApplicationUser", "NguoiDung")
+                        .WithMany()
+                        .HasForeignKey("MaNguoiDung")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("NguoiDung");
+                });
+
             modelBuilder.Entity("QLTCCN.Models.Data.DanhMuc", b =>
                 {
                     b.HasOne("QLTCCN.Models.Data.ApplicationUser", "NguoiDung")
@@ -687,21 +749,21 @@ namespace QLTCCN.Migrations
 
             modelBuilder.Entity("QLTCCN.Models.Data.DauTu", b =>
                 {
-                    b.HasOne("QLTCCN.Models.Data.ApplicationUser", null)
-                        .WithMany("DauTus")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("QLTCCN.Models.Data.LoaiDauTu", "LoaiDauTu")
                         .WithMany("DauTus")
                         .HasForeignKey("MaLoaiDauTu")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("QLTCCN.Models.Data.NguoiDung", "NguoiDung")
+                    b.HasOne("QLTCCN.Models.Data.ApplicationUser", "NguoiDung")
                         .WithMany("DauTus")
                         .HasForeignKey("MaNguoiDung")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("QLTCCN.Models.Data.NguoiDung", null)
+                        .WithMany("DauTus")
+                        .HasForeignKey("NguoiDungMaNguoiDung");
 
                     b.Navigation("LoaiDauTu");
 
@@ -710,17 +772,17 @@ namespace QLTCCN.Migrations
 
             modelBuilder.Entity("QLTCCN.Models.Data.GiaoDich", b =>
                 {
-                    b.HasOne("QLTCCN.Models.Data.ApplicationUser", null)
+                    b.HasOne("QLTCCN.Models.Data.DanhMuc", null)
                         .WithMany("GiaoDichs")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("DanhMucMaDanhMuc");
 
                     b.HasOne("QLTCCN.Models.Data.DanhMuc", "DanhMuc")
-                        .WithMany("GiaoDichs")
-                        .HasForeignKey("DanhMucMaDanhMuc")
+                        .WithMany()
+                        .HasForeignKey("MaDanhMuc")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("QLTCCN.Models.Data.NguoiDung", "NguoiDung")
+                    b.HasOne("QLTCCN.Models.Data.ApplicationUser", "NguoiDung")
                         .WithMany("GiaoDichs")
                         .HasForeignKey("MaNguoiDung")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -731,6 +793,10 @@ namespace QLTCCN.Migrations
                         .HasForeignKey("MaTaiKhoan")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("QLTCCN.Models.Data.NguoiDung", null)
+                        .WithMany("GiaoDichs")
+                        .HasForeignKey("NguoiDungMaNguoiDung");
 
                     b.Navigation("DanhMuc");
 
@@ -752,21 +818,21 @@ namespace QLTCCN.Migrations
 
             modelBuilder.Entity("QLTCCN.Models.Data.MucTieu", b =>
                 {
-                    b.HasOne("QLTCCN.Models.Data.ApplicationUser", null)
-                        .WithMany("MucTieus")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("QLTCCN.Models.Data.DanhMuc", "DanhMuc")
                         .WithMany("MucTieus")
                         .HasForeignKey("MaDanhMuc")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("QLTCCN.Models.Data.NguoiDung", "NguoiDung")
+                    b.HasOne("QLTCCN.Models.Data.ApplicationUser", "NguoiDung")
                         .WithMany("MucTieus")
                         .HasForeignKey("MaNguoiDung")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("QLTCCN.Models.Data.NguoiDung", null)
+                        .WithMany("MucTieus")
+                        .HasForeignKey("NguoiDungMaNguoiDung");
 
                     b.Navigation("DanhMuc");
 
@@ -775,15 +841,15 @@ namespace QLTCCN.Migrations
 
             modelBuilder.Entity("QLTCCN.Models.Data.NoKhoanVay", b =>
                 {
-                    b.HasOne("QLTCCN.Models.Data.ApplicationUser", null)
-                        .WithMany("NoKhoanVays")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("QLTCCN.Models.Data.NguoiDung", "NguoiDung")
+                    b.HasOne("QLTCCN.Models.Data.ApplicationUser", "NguoiDung")
                         .WithMany("NoKhoanVays")
                         .HasForeignKey("MaNguoiDung")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("QLTCCN.Models.Data.NguoiDung", null)
+                        .WithMany("NoKhoanVays")
+                        .HasForeignKey("NguoiDungMaNguoiDung");
 
                     b.Navigation("NguoiDung");
                 });
@@ -805,15 +871,15 @@ namespace QLTCCN.Migrations
 
             modelBuilder.Entity("QLTCCN.Models.Data.ThongBao", b =>
                 {
-                    b.HasOne("QLTCCN.Models.Data.ApplicationUser", null)
-                        .WithMany("ThongBaos")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("QLTCCN.Models.Data.NguoiDung", "NguoiDung")
+                    b.HasOne("QLTCCN.Models.Data.ApplicationUser", "NguoiDung")
                         .WithMany("ThongBaos")
                         .HasForeignKey("MaNguoiDung")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("QLTCCN.Models.Data.NguoiDung", null)
+                        .WithMany("ThongBaos")
+                        .HasForeignKey("NguoiDungMaNguoiDung");
 
                     b.Navigation("NguoiDung");
                 });

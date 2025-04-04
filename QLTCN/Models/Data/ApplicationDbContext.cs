@@ -21,6 +21,7 @@ namespace QLTCCN.Models.Data
         public DbSet<ThongBao> ThongBao { get; set; }
         public DbSet<LoaiDauTu> LoaiDauTu { get; set; }
         public DbSet<DauTu> DauTu { get; set; }
+        public DbSet<BaoCao> BaoCao { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -92,6 +93,29 @@ namespace QLTCCN.Models.Data
                 .WithMany(l => l.DauTus)
                 .HasForeignKey(d => d.MaLoaiDauTu)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<BaoCao>(entity =>
+            {
+                // Cấu hình khóa ngoại MaNguoiDung với ApplicationUser
+                entity.HasOne(b => b.NguoiDung)
+                      .WithMany()
+                      .HasForeignKey(b => b.MaNguoiDung)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // Cấu hình giá trị mặc định cho NgayTao
+                entity.Property(b => b.NgayTao)
+                      .HasDefaultValueSql("GETDATE()");
+
+                // Cấu hình giá trị mặc định cho các trường decimal
+                entity.Property(b => b.TongThuNhap)
+                      .HasDefaultValue(0m);
+
+                entity.Property(b => b.TongChiTieu)
+                      .HasDefaultValue(0m);
+
+                entity.Property(b => b.SoTienTietKiem)
+                      .HasDefaultValue(0m);
+            });
         }
+
     }
 }

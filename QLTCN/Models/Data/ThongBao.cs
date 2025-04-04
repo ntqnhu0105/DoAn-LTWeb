@@ -23,6 +23,6 @@ namespace QLTCCN.Models.Data
         public int? MaLienKet { get; set; } // Liên kết đến bảng khác
 
         // Navigation property
-        public NguoiDung NguoiDung { get; set; }
+        public ApplicationUser NguoiDung { get; set; }
     }
 }

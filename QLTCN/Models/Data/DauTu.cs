@@ -34,7 +34,7 @@ namespace QLTCCN.Models.Data
         public string GhiChu { get; set; }
 
         // Navigation properties
-        public NguoiDung NguoiDung { get; set; }
+        public ApplicationUser NguoiDung { get; set; }
         public LoaiDauTu LoaiDauTu { get; set; }
     }
 }
