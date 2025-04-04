@@ -1,0 +1,106 @@
+﻿@model IEnumerable<QLTCCN.Models.Data.BaoCao>
+
+<h2>Báo cáo tài chính</h2>
+<p><a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a></p>
+
+<!-- Form lọc -->
+<div class="mb-4">
+    <form asp-action="Report" method="get" class="form-inline">
+        <div class="form-group mr-2">
+            <label for="day" class="mr-2">Ngày:</label>
+            <input type="number" name="day" id="day" class="form-control" value="@ViewBag.Day" min="1" max="31" style="width: 80px;" />
+        </div>
+        <div class="form-group mr-2">
+            <label for="month" class="mr-2">Tháng:</label>
+            <input type="number" name="month" id="month" class="form-control" value="@ViewBag.Month" min="1" max="12" style="width: 80px;" />
+        </div>
+        <div class="form-group mr-2">
+            <label for="year" class="mr-2">Năm:</label>
+            <input type="number" name="year" id="year" class="form-control" value="@ViewBag.Year" min="2000" max="2100" style="width: 100px;" />
+        </div>
+        <button type="submit" class="btn btn-primary">Lọc</button>
+    </form>
+</div>
+
+<!-- Thông báo nếu không có dữ liệu -->
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-warning">@ViewBag.Message</div>
+}
+
+<!-- Biểu đồ -->
+<div>
+    <canvas id="myChart" width="400" height="200"></canvas>
+</div>
+
+<!-- Bảng dữ liệu -->
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Ngày Tạo</th>
+            <th>Tháng</th>
+            <th>Năm</th>
+            <th>Tổng Thu Nhập</th>
+            <th>Tổng Chi Tiêu</th>
+            <th>Số Tiền Tiết Kiệm</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
+                <td>@item.Thang</td>
+                <td>@item.Nam</td>
+                <td>@item.TongThuNhap.ToString("N0") VNĐ</td>
+                <td>@item.TongChiTieu.ToString("N0") VNĐ</td>
+                <td>@item.SoTienTietKiem.ToString("N0") VNĐ</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var chartData = @Html.Raw(ViewBag.ChartData);
+        console.log(chartData); // Kiểm tra dữ liệu trong console
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: 'Thu Nhập',
+                        data: chartData.thuNhap,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Chi Tiêu',
+                        data: chartData.chiTieu,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Tiết Kiệm',
+                        data: chartData.tietKiem,
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

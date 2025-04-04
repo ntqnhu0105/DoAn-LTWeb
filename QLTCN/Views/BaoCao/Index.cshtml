@@ -1,0 +1,32 @@
+﻿@model IEnumerable<QLTCCN.Models.Data.BaoCao>
+
+<h2>Danh sách báo cáo</h2>
+<p><a asp-action="Report" class="btn btn-info">Xem báo cáo và biểu đồ</a></p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ngày Tạo</th>
+            <th>Tháng</th>
+            <th>Năm</th>
+            <th>Tổng Thu Nhập</th>
+            <th>Tổng Chi Tiêu</th>
+            <th>Số Tiền Tiết Kiệm</th>
+            <th>Ghi Chú</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
+                <td>@item.Thang</td>
+                <td>@item.Nam</td>
+                <td>@item.TongThuNhap.ToString("N0") VNĐ</td>
+                <td>@item.TongChiTieu.ToString("N0") VNĐ</td>
+                <td>@item.SoTienTietKiem.ToString("N0") VNĐ</td>
+                <td>@item.GhiChu</td>
+            </tr>
+        }
+    </tbody>
+</table>
