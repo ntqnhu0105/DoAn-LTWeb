@@ -36,7 +36,7 @@ namespace QLTCCN.Models.Data
         public DateTime? NgayTraTiepTheo { get; set; }
 
         // Navigation properties
-        public NguoiDung NguoiDung { get; set; }
+        public ApplicationUser NguoiDung { get; set; }
         public ICollection<LichSuTraNo> LichSuTraNos { get; set; }
     }
 }
