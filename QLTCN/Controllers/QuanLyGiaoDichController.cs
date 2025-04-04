@@ -148,44 +148,24 @@ namespace QLTCCN.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var giaoDich = await _context.GiaoDich
-                .FirstOrDefaultAsync(t => t.MaGiaoDich == id && t.MaNguoiDung == userId);
+            var mucTieu = await _context.MucTieu
+                .FirstOrDefaultAsync(m => m.MaMucTieu == id && m.MaNguoiDung == userId);
 
-            if (giaoDich == null)
+            if (mucTieu == null)
             {
                 return NotFound();
             }
 
-            // Debug chi tiết
-            Console.WriteLine($"Edit GET - MaGiaoDich: {giaoDich.MaGiaoDich}");
-            Console.WriteLine($"SoTien: {giaoDich.SoTien}");
-            Console.WriteLine($"LoaiGiaoDich: {giaoDich.LoaiGiaoDich}");
-            Console.WriteLine($"MaTaiKhoan: {giaoDich.MaTaiKhoan}");
-            Console.WriteLine($"MaDanhMuc: {giaoDich.MaDanhMuc}");
-            Console.WriteLine($"NgayGiaoDich: {giaoDich.NgayGiaoDich}");
-            Console.WriteLine($"GhiChu: {giaoDich.GhiChu}");
+            // Debug giá trị
+            Console.WriteLine($"MaMucTieu: {mucTieu.MaMucTieu}");
+            Console.WriteLine($"TenMucTieu: {mucTieu.TenMucTieu}");
+            Console.WriteLine($"SoTienMucTieu: {mucTieu.SoTienMucTieu}");
+            Console.WriteLine($"SoTienHienTai: {mucTieu.SoTienHienTai}");
+            Console.WriteLine($"MaDanhMuc: {mucTieu.MaDanhMuc}");
+            Console.WriteLine($"HanChot: {mucTieu.HanChot}");
 
-            ViewBag.DanhMuc = new SelectList(_context.DanhMuc, "MaDanhMuc", "TenDanhMuc", giaoDich.MaDanhMuc);
-            ViewBag.TaiKhoan = new SelectList(
-                _context.TaiKhoan
-                    .Where(t => t.MaNguoiDung == userId)
-                    .Select(t => new { t.MaTaiKhoan, Ten = $"{t.TenTaiKhoan} ({t.LoaiTaiKhoan})" }),
-                "MaTaiKhoan",
-                "Ten",
-                giaoDich.MaTaiKhoan
-            );
-            ViewBag.LoaiGiaoDich = new SelectList(
-                new[]
-                {
-            new { Value = "ThuNhap", Text = "Thu nhập" },
-            new { Value = "ChiTieu", Text = "Chi tiêu" }
-                },
-                "Value",
-                "Text",
-                giaoDich.LoaiGiaoDich
-            );
-
-            return View(giaoDich);
+            ViewBag.DanhMuc = new SelectList(_context.DanhMuc, "MaDanhMuc", "TenDanhMuc", mucTieu.MaDanhMuc);
+            return View(mucTieu);
         }
 
         // POST: Transaction/Edit/5 - Cập nhật giao dịch

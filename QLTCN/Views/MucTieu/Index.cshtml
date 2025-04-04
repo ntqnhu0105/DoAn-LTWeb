@@ -1,0 +1,57 @@
+﻿@model List<QLTCCN.Models.Data.MucTieu>
+
+@{
+    ViewData["Title"] = "Danh sách mục tiêu";
+}
+
+<h2>Danh sách mục tiêu</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tên mục tiêu</th>
+            <th>Danh mục</th>
+            <th>Số tiền mục tiêu</th>
+            <th>Số tiền hiện tại</th>
+            <th>Tiến độ</th>
+            <th>Hạn chót</th>
+            <th>Trạng thái</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var progress = item.SoTienMucTieu > 0 ? (item.SoTienHienTai / item.SoTienMucTieu) * 100 : 0;
+            var statusClass = item.TrangThai switch
+            {
+                "HoanThanh" => "text-success",
+                "ThatBai" => "text-danger",
+                "DangTienHanh" => "text-primary",
+                _ => ""
+            };
+                <tr>
+                    <td>@item.TenMucTieu</td>
+                    <td>@item.DanhMuc.TenDanhMuc</td>
+                    <td>@item.SoTienMucTieu.ToString("C") VNĐ</td>
+                    <td>@item.SoTienHienTai.ToString("C") VNĐ</td>
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: @progress%;" 
+                                 aria-valuenow="@progress" aria-valuemin="0" aria-valuemax="100">
+                            @progress.ToString("F2")%
+                            </div>
+                        </div>
+                    </td>
+                    <td>@item.HanChot.ToString("dd/MM/yyyy")</td>
+                    <td class="@statusClass">@item.TrangThai</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.MaMucTieu" class="btn btn-sm btn-warning">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@item.MaMucTieu" class="btn btn-sm btn-danger">Xóa</a>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Thêm mục tiêu mới</a>
