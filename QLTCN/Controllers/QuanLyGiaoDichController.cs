@@ -1,12 +1,13 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using QLTCCN.Models.Data;
 
 namespace QLTCCN.Controllers
 {
-    [Authorize] // Yêu cầu người dùng đăng nhập để truy cập
+    [Authorize]
     public class QuanLyGiaoDichController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,16 +20,22 @@ namespace QLTCCN.Controllers
         // GET: Transaction/Index - Hiển thị danh sách giao dịch
         public async Task<IActionResult> Index()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Lấy ID người dùng từ Identity
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var transactions = await _context.GiaoDich
-                .Where(t => t.MaNguoiDung == userId) // So sánh trực tiếp
+                .Where(t => t.MaNguoiDung == userId)
                 .Include(t => t.DanhMuc)
                 .Include(t => t.TaiKhoan)
                 .OrderByDescending(t => t.NgayGiaoDich)
                 .ToListAsync();
 
+            // Debug
+            foreach (var t in transactions)
+            {
+                Console.WriteLine($"MaGiaoDich: {t.MaGiaoDich}, MaDanhMuc: {t.MaDanhMuc}, DanhMuc: {(t.DanhMuc != null ? t.DanhMuc.TenDanhMuc : "null")}");
+            }
+
             return View(transactions);
-        }
+        }   
 
         // GET: Transaction/Create - Hiển thị form thêm giao dịch
         [HttpGet]
@@ -36,11 +43,28 @@ namespace QLTCCN.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // Lấy danh sách danh mục và tài khoản của người dùng hiện tại để hiển thị trong dropdown
-            ViewBag.DanhMuc = _context.DanhMuc.ToList();
-            ViewBag.TaiKhoan = _context.TaiKhoan
-                .Where(t => t.MaNguoiDung == userId)
-                .ToList();
+            // Dropdown cho DanhMuc
+            ViewBag.DanhMuc = new SelectList(_context.DanhMuc, "MaDanhMuc", "TenDanhMuc");
+
+            // Dropdown cho TaiKhoan
+            ViewBag.TaiKhoan = new SelectList(
+                _context.TaiKhoan
+                    .Where(t => t.MaNguoiDung == userId)
+                    .Select(t => new { t.MaTaiKhoan, Ten = $"{t.TenTaiKhoan} ({t.LoaiTaiKhoan})" }),
+                "MaTaiKhoan",
+                "Ten"
+            );
+
+            // Dropdown cho LoaiGiaoDich (cố định)
+            ViewBag.LoaiGiaoDich = new SelectList(
+                new[]
+                {
+                    new { Value = "ThuNhap", Text = "Thu nhập" },
+                    new { Value = "ChiTieu", Text = "Chi tiêu" }
+                },
+                "Value",
+                "Text"
+            );
 
             return View();
         }
@@ -48,35 +72,74 @@ namespace QLTCCN.Controllers
         // POST: Transaction/Create - Thêm giao dịch mới
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(GiaoDich giaoDich)
+        public async Task<IActionResult> Create([Bind("SoTien,LoaiGiaoDich,MaTaiKhoan,MaDanhMuc,NgayGiaoDich,GhiChu")] GiaoDich giaoDich)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            giaoDich.MaNguoiDung = userId;
+
+            // Xóa validation của MaNguoiDung khỏi ModelState
+            ModelState.Remove("MaNguoiDung");
+
+            Console.WriteLine($"MaNguoiDung: {giaoDich.MaNguoiDung}");
+            Console.WriteLine($"SoTien: {giaoDich.SoTien}");
+            Console.WriteLine($"LoaiGiaoDich: {giaoDich.LoaiGiaoDich}");
+            Console.WriteLine($"MaTaiKhoan: {giaoDich.MaTaiKhoan}");
+            Console.WriteLine($"MaDanhMuc: {giaoDich.MaDanhMuc}");
+            Console.WriteLine($"NgayGiaoDich: {giaoDich.NgayGiaoDich}");
+
             if (ModelState.IsValid)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                giaoDich.MaNguoiDung = userId;
-
-                // Cập nhật số dư tài khoản
-                var taiKhoan = await _context.TaiKhoan.FindAsync(giaoDich.MaTaiKhoan);
-                if (taiKhoan != null)
+                try
                 {
-                    if (giaoDich.LoaiGiaoDich == "ThuNhap")
-                        taiKhoan.SoDu += giaoDich.SoTien;
-                    else if (giaoDich.LoaiGiaoDich == "ChiTieu")
-                        taiKhoan.SoDu -= giaoDich.SoTien;
+                    var taiKhoan = await _context.TaiKhoan.FindAsync(giaoDich.MaTaiKhoan);
+                    if (taiKhoan != null)
+                    {
+                        if (giaoDich.LoaiGiaoDich == "ThuNhap")
+                            taiKhoan.SoDu += giaoDich.SoTien;
+                        else if (giaoDich.LoaiGiaoDich == "ChiTieu")
+                            taiKhoan.SoDu -= giaoDich.SoTien;
 
-                    _context.TaiKhoan.Update(taiKhoan);
+                        _context.TaiKhoan.Update(taiKhoan);
+                    }
+
+                    _context.GiaoDich.Add(giaoDich);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-
-                _context.GiaoDich.Add(giaoDich);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"Lỗi khi lưu giao dịch: {ex.Message}");
+                    Console.WriteLine($"Exception: {ex.Message}");
+                }
             }
 
-            // Nếu ModelState không hợp lệ, trả lại form với dữ liệu đã nhập
-            ViewBag.DanhMuc = _context.DanhMuc.ToList();
-            ViewBag.TaiKhoan = _context.TaiKhoan
-                .Where(t => t.MaNguoiDung == (User.FindFirstValue(ClaimTypes.NameIdentifier)))
-                .ToList();
+            // Hiển thị lỗi nếu có
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+            foreach (var error in errors)
+            {
+                ModelState.AddModelError("", error);
+                Console.WriteLine($"ModelState Error: {error}");
+            }
+
+            ViewBag.DanhMuc = new SelectList(_context.DanhMuc, "MaDanhMuc", "TenDanhMuc");
+            ViewBag.TaiKhoan = new SelectList(
+                _context.TaiKhoan
+                    .Where(t => t.MaNguoiDung == userId)
+                    .Select(t => new { t.MaTaiKhoan, Ten = $"{t.TenTaiKhoan} ({t.LoaiTaiKhoan})" }),
+                "MaTaiKhoan",
+                "Ten"
+            );
+            ViewBag.LoaiGiaoDich = new SelectList(
+                new[]
+                {
+            new { Value = "ThuNhap", Text = "Thu nhập" },
+            new { Value = "ChiTieu", Text = "Chi tiêu" }
+                },
+                "Value",
+                "Text",
+                giaoDich.LoaiGiaoDich
+            );
+
             return View(giaoDich);
         }
 
@@ -93,10 +156,34 @@ namespace QLTCCN.Controllers
                 return NotFound();
             }
 
-            ViewBag.DanhMuc = _context.DanhMuc.ToList();
-            ViewBag.TaiKhoan = _context.TaiKhoan
-                .Where(t => t.MaNguoiDung == userId)
-                .ToList();
+            // Debug chi tiết
+            Console.WriteLine($"Edit GET - MaGiaoDich: {giaoDich.MaGiaoDich}");
+            Console.WriteLine($"SoTien: {giaoDich.SoTien}");
+            Console.WriteLine($"LoaiGiaoDich: {giaoDich.LoaiGiaoDich}");
+            Console.WriteLine($"MaTaiKhoan: {giaoDich.MaTaiKhoan}");
+            Console.WriteLine($"MaDanhMuc: {giaoDich.MaDanhMuc}");
+            Console.WriteLine($"NgayGiaoDich: {giaoDich.NgayGiaoDich}");
+            Console.WriteLine($"GhiChu: {giaoDich.GhiChu}");
+
+            ViewBag.DanhMuc = new SelectList(_context.DanhMuc, "MaDanhMuc", "TenDanhMuc", giaoDich.MaDanhMuc);
+            ViewBag.TaiKhoan = new SelectList(
+                _context.TaiKhoan
+                    .Where(t => t.MaNguoiDung == userId)
+                    .Select(t => new { t.MaTaiKhoan, Ten = $"{t.TenTaiKhoan} ({t.LoaiTaiKhoan})" }),
+                "MaTaiKhoan",
+                "Ten",
+                giaoDich.MaTaiKhoan
+            );
+            ViewBag.LoaiGiaoDich = new SelectList(
+                new[]
+                {
+            new { Value = "ThuNhap", Text = "Thu nhập" },
+            new { Value = "ChiTieu", Text = "Chi tiêu" }
+                },
+                "Value",
+                "Text",
+                giaoDich.LoaiGiaoDich
+            );
 
             return View(giaoDich);
         }
@@ -104,58 +191,97 @@ namespace QLTCCN.Controllers
         // POST: Transaction/Edit/5 - Cập nhật giao dịch
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, GiaoDich giaoDich)
+        public async Task<IActionResult> Edit(int id, [Bind("MaGiaoDich,SoTien,LoaiGiaoDich,MaTaiKhoan,MaDanhMuc,NgayGiaoDich,GhiChu,MaNguoiDung")] GiaoDich giaoDich)
         {
             if (id != giaoDich.MaGiaoDich)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (giaoDich.MaNguoiDung != userId)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var existingTransaction = await _context.GiaoDich
-                    .FirstOrDefaultAsync(t => t.MaGiaoDich == id && t.MaNguoiDung == userId);
-
-                if (existingTransaction == null)
-                {
-                    return NotFound();
-                }
-
-                // Cập nhật số dư tài khoản (hoàn tác giao dịch cũ và áp dụng giao dịch mới)
-                var taiKhoan = await _context.TaiKhoan.FindAsync(giaoDich.MaTaiKhoan);
-                if (taiKhoan != null)
-                {
-                    if (existingTransaction.LoaiGiaoDich == "ThuNhap")
-                        taiKhoan.SoDu -= existingTransaction.SoTien;
-                    else if (existingTransaction.LoaiGiaoDich == "ChiTieu")
-                        taiKhoan.SoDu += existingTransaction.SoTien;
-
-                    if (giaoDich.LoaiGiaoDich == "ThuNhap")
-                        taiKhoan.SoDu += giaoDich.SoTien;
-                    else if (giaoDich.LoaiGiaoDich == "ChiTieu")
-                        taiKhoan.SoDu -= giaoDich.SoTien;
-
-                    _context.TaiKhoan.Update(taiKhoan);
-                }
-
-                // Cập nhật thông tin giao dịch
-                existingTransaction.MaTaiKhoan = giaoDich.MaTaiKhoan;
-                existingTransaction.MaDanhMuc = giaoDich.MaDanhMuc;
-                existingTransaction.SoTien = giaoDich.SoTien;
-                existingTransaction.LoaiGiaoDich = giaoDich.LoaiGiaoDich;
-                existingTransaction.NgayGiaoDich = giaoDich.NgayGiaoDich;
-                existingTransaction.GhiChu = giaoDich.GhiChu;
-
-                _context.GiaoDich.Update(existingTransaction);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Forbid();
             }
 
-            ViewBag.DanhMuc = _context.DanhMuc.ToList();
-            ViewBag.TaiKhoan = _context.TaiKhoan
-                .Where(t => t.MaNguoiDung == (User.FindFirstValue(ClaimTypes.NameIdentifier)))
-                .ToList();
+            ModelState.Remove("MaNguoiDung");
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var existingGiaoDich = await _context.GiaoDich
+                        .FirstOrDefaultAsync(t => t.MaGiaoDich == id && t.MaNguoiDung == userId);
+
+                    if (existingGiaoDich == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Cập nhật số dư tài khoản
+                    var taiKhoan = await _context.TaiKhoan.FindAsync(giaoDich.MaTaiKhoan);
+                    if (taiKhoan != null)
+                    {
+                        // Hoàn tác giao dịch cũ
+                        if (existingGiaoDich.LoaiGiaoDich == "ThuNhap")
+                            taiKhoan.SoDu -= existingGiaoDich.SoTien;
+                        else if (existingGiaoDich.LoaiGiaoDich == "ChiTieu")
+                            taiKhoan.SoDu += existingGiaoDich.SoTien;
+
+                        // Áp dụng giao dịch mới
+                        if (giaoDich.LoaiGiaoDich == "ThuNhap")
+                            taiKhoan.SoDu += giaoDich.SoTien;
+                        else if (giaoDich.LoaiGiaoDich == "ChiTieu")
+                            taiKhoan.SoDu -= giaoDich.SoTien;
+
+                        _context.TaiKhoan.Update(taiKhoan);
+                    }
+
+                    // Cập nhật giao dịch
+                    existingGiaoDich.SoTien = giaoDich.SoTien;
+                    existingGiaoDich.LoaiGiaoDich = giaoDich.LoaiGiaoDich;
+                    existingGiaoDich.MaTaiKhoan = giaoDich.MaTaiKhoan;
+                    existingGiaoDich.MaDanhMuc = giaoDich.MaDanhMuc;
+                    existingGiaoDich.NgayGiaoDich = giaoDich.NgayGiaoDich;
+                    existingGiaoDich.GhiChu = giaoDich.GhiChu;
+
+                    _context.GiaoDich.Update(existingGiaoDich);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"Lỗi khi cập nhật giao dịch: {ex.Message}");
+                }
+            }
+
+            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+            foreach (var error in errors)
+            {
+                ModelState.AddModelError("", error);
+                Console.WriteLine($"ModelState Error: {error}");
+            }
+
+            ViewBag.DanhMuc = new SelectList(_context.DanhMuc, "MaDanhMuc", "TenDanhMuc", giaoDich.MaDanhMuc);
+            ViewBag.TaiKhoan = new SelectList(
+                _context.TaiKhoan
+                    .Where(t => t.MaNguoiDung == userId)
+                    .Select(t => new { t.MaTaiKhoan, Ten = $"{t.TenTaiKhoan} ({t.LoaiTaiKhoan})" }),
+                "MaTaiKhoan",
+                "Ten",
+                giaoDich.MaTaiKhoan
+            );
+            ViewBag.LoaiGiaoDich = new SelectList(
+                new[]
+                {
+                    new { Value = "ThuNhap", Text = "Thu nhập" },
+                    new { Value = "ChiTieu", Text = "Chi tiêu" }
+                },
+                "Value",
+                "Text",
+                giaoDich.LoaiGiaoDich
+            );
+
             return View(giaoDich);
         }
 
@@ -186,9 +312,13 @@ namespace QLTCCN.Controllers
             var giaoDich = await _context.GiaoDich
                 .FirstOrDefaultAsync(t => t.MaGiaoDich == id && t.MaNguoiDung == userId);
 
-            if (giaoDich != null)
+            if (giaoDich == null)
             {
-                // Hoàn tác số dư tài khoản
+                return NotFound();
+            }
+
+            try
+            {
                 var taiKhoan = await _context.TaiKhoan.FindAsync(giaoDich.MaTaiKhoan);
                 if (taiKhoan != null)
                 {
@@ -202,9 +332,13 @@ namespace QLTCCN.Controllers
 
                 _context.GiaoDich.Remove(giaoDich);
                 await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Lỗi khi xóa giao dịch: {ex.Message}");
+                return View(giaoDich); // Trả lại view Delete với lỗi
+            }
         }
     }
 }

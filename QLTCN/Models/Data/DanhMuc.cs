@@ -13,9 +13,9 @@ namespace QLTCCN.Models.Data
 
         [StringLength(10)]
         public string Loai { get; set; } // "Thu" hoặc "Chi"
-
+        public ApplicationUser? NguoiDung { get; set; }
         // Navigation properties
-        public ICollection<GiaoDich> GiaoDichs { get; set; }
-        public ICollection<MucTieu> MucTieus { get; set; }
+        public ICollection<GiaoDich>? GiaoDichs { get; set; }
+        public ICollection<MucTieu>? MucTieus { get; set; }
     }
 }

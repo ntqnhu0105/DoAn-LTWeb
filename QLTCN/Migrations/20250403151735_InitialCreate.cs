@@ -52,20 +52,6 @@ namespace QLTCCN.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DanhMuc",
-                columns: table => new
-                {
-                    MaDanhMuc = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TenDanhMuc = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Loai = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DanhMuc", x => x.MaDanhMuc);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "LoaiDauTu",
                 columns: table => new
                 {
@@ -84,7 +70,6 @@ namespace QLTCCN.Migrations
                 {
                     MaNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TenDangNhap = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    MatKhau = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     HoTen = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -201,6 +186,26 @@ namespace QLTCCN.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "DanhMuc",
+                columns: table => new
+                {
+                    MaDanhMuc = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TenDanhMuc = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Loai = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    NguoiDungId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DanhMuc", x => x.MaDanhMuc);
+                    table.ForeignKey(
+                        name: "FK_DanhMuc_AspNetUsers_NguoiDungId",
+                        column: x => x.NguoiDungId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DauTu",
                 columns: table => new
                 {
@@ -226,39 +231,6 @@ namespace QLTCCN.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_DauTu_NguoiDung_MaNguoiDung",
-                        column: x => x.MaNguoiDung,
-                        principalTable: "NguoiDung",
-                        principalColumn: "MaNguoiDung",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MucTieu",
-                columns: table => new
-                {
-                    MaMucTieu = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MaNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MaDanhMuc = table.Column<int>(type: "int", nullable: false),
-                    TenMucTieu = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    SoTienMucTieu = table.Column<decimal>(type: "decimal(15,2)", nullable: false),
-                    SoTienHienTai = table.Column<decimal>(type: "decimal(15,2)", nullable: false),
-                    HanChot = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TrangThai = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    GhiChu = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MucTieu", x => x.MaMucTieu);
-                    table.ForeignKey(
-                        name: "FK_MucTieu_DanhMuc_MaDanhMuc",
-                        column: x => x.MaDanhMuc,
-                        principalTable: "DanhMuc",
-                        principalColumn: "MaDanhMuc",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_MucTieu_NguoiDung_MaNguoiDung",
                         column: x => x.MaNguoiDung,
                         principalTable: "NguoiDung",
                         principalColumn: "MaNguoiDung",
@@ -333,6 +305,39 @@ namespace QLTCCN.Migrations
                     table.PrimaryKey("PK_ThongBao", x => x.MaThongBao);
                     table.ForeignKey(
                         name: "FK_ThongBao_NguoiDung_MaNguoiDung",
+                        column: x => x.MaNguoiDung,
+                        principalTable: "NguoiDung",
+                        principalColumn: "MaNguoiDung",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MucTieu",
+                columns: table => new
+                {
+                    MaMucTieu = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MaNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MaDanhMuc = table.Column<int>(type: "int", nullable: false),
+                    TenMucTieu = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    SoTienMucTieu = table.Column<decimal>(type: "decimal(15,2)", nullable: false),
+                    SoTienHienTai = table.Column<decimal>(type: "decimal(15,2)", nullable: false),
+                    HanChot = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TrangThai = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    GhiChu = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MucTieu", x => x.MaMucTieu);
+                    table.ForeignKey(
+                        name: "FK_MucTieu_DanhMuc_MaDanhMuc",
+                        column: x => x.MaDanhMuc,
+                        principalTable: "DanhMuc",
+                        principalColumn: "MaDanhMuc",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MucTieu_NguoiDung_MaNguoiDung",
                         column: x => x.MaNguoiDung,
                         principalTable: "NguoiDung",
                         principalColumn: "MaNguoiDung",
@@ -439,6 +444,11 @@ namespace QLTCCN.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DanhMuc_NguoiDungId",
+                table: "DanhMuc",
+                column: "NguoiDungId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DauTu_MaLoaiDauTu",
                 table: "DauTu",
                 column: "MaLoaiDauTu");
@@ -531,9 +541,6 @@ namespace QLTCCN.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "LoaiDauTu");
 
             migrationBuilder.DropTable(
@@ -547,6 +554,9 @@ namespace QLTCCN.Migrations
 
             migrationBuilder.DropTable(
                 name: "NguoiDung");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

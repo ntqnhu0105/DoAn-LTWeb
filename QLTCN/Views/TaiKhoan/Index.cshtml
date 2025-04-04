@@ -1,0 +1,31 @@
+﻿@model IEnumerable<QLTCCN.Models.Data.TaiKhoan>
+
+<h2>Danh sách tài khoản</h2>
+<p><a asp-action="Create" class="btn btn-primary">Thêm tài khoản mới</a></p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tên tài khoản</th>
+            <th>Số dư</th>
+            <th>Loại tài khoản</th>
+            <th>Ngày tạo</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+                <tr>
+                    <td>@item.TenTaiKhoan</td>
+                    <td>@item.SoDu.ToString("C")</td>
+                    <td>@item.LoaiTaiKhoan</td>
+                    <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.MaTaiKhoan">Sửa</a> |
+                        <a asp-action="Delete" asp-route-id="@item.MaTaiKhoan">Xóa</a>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>

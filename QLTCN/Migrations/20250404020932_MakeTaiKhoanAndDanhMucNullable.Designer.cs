@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QLTCCN.Models.Data;
 
@@ -11,9 +12,11 @@ using QLTCCN.Models.Data;
 namespace QLTCCN.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250404020932_MakeTaiKhoanAndDanhMucNullable")]
+    partial class MakeTaiKhoanAndDanhMucNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -346,8 +349,6 @@ namespace QLTCCN.Migrations
                     b.HasKey("MaGiaoDich");
 
                     b.HasIndex("DanhMucMaDanhMuc");
-
-                    b.HasIndex("MaDanhMuc");
 
                     b.HasIndex("MaNguoiDung");
 
@@ -709,15 +710,9 @@ namespace QLTCCN.Migrations
 
             modelBuilder.Entity("QLTCCN.Models.Data.GiaoDich", b =>
                 {
-                    b.HasOne("QLTCCN.Models.Data.DanhMuc", null)
+                    b.HasOne("QLTCCN.Models.Data.DanhMuc", "DanhMuc")
                         .WithMany("GiaoDichs")
                         .HasForeignKey("DanhMucMaDanhMuc");
-
-                    b.HasOne("QLTCCN.Models.Data.DanhMuc", "DanhMuc")
-                        .WithMany()
-                        .HasForeignKey("MaDanhMuc")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.HasOne("QLTCCN.Models.Data.ApplicationUser", "NguoiDung")
                         .WithMany("GiaoDichs")

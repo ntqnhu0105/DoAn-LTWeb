@@ -25,7 +25,7 @@ namespace QLTCCN.Models.Data
         public DateTime NgayTao { get; set; } = DateTime.Now;
 
         // Navigation properties
-        public NguoiDung NguoiDung { get; set; }
-        public ICollection<GiaoDich> GiaoDichs { get; set; }
+        public ApplicationUser? NguoiDung { get; set; }
+        public ICollection<GiaoDich>? GiaoDichs { get; set; }
     }
 }

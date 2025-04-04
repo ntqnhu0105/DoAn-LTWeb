@@ -1,0 +1,37 @@
+﻿@model List<QLTCCN.Models.Data.DanhMuc>
+
+@{
+    ViewData["Title"] = "Danh sách danh mục";
+}
+
+<h2>Danh sách danh mục</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tên danh mục</th>
+            <th>Loại</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+                <tr>
+                    <td>@item.TenDanhMuc</td>
+                    <td>@item.Loai</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.MaDanhMuc" class="btn btn-sm btn-warning">Sửa</a>
+                        <a asp-action="Delete" asp-route-id="@item.MaDanhMuc" class="btn btn-sm btn-danger">Xóa</a>
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Thêm danh mục mới</a>
