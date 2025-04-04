@@ -4180,23 +4180,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Dell XPS 9300\\.nuget\\packages\\": {},
-    "D:\\Shared\\NuGetPackages": {}
+    "C:\\Users\\ADIMIN\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\DoAn-LTWeb\\QLTCN\\QLTCCN.csproj",
+      "projectUniqueName": "C:\\Users\\ADIMIN\\Desktop\\DoAn-LTWeb\\QLTCN\\QLTCCN.csproj",
       "projectName": "QLTCCN",
-      "projectPath": "D:\\DoAn-LTWeb\\QLTCN\\QLTCCN.csproj",
-      "packagesPath": "C:\\Users\\Dell XPS 9300\\.nuget\\packages\\",
-      "outputPath": "D:\\DoAn-LTWeb\\QLTCN\\obj\\",
+      "projectPath": "C:\\Users\\ADIMIN\\Desktop\\DoAn-LTWeb\\QLTCN\\QLTCCN.csproj",
+      "packagesPath": "C:\\Users\\ADIMIN\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ADIMIN\\Desktop\\DoAn-LTWeb\\QLTCN\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "D:\\Shared\\NuGetPackages"
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\Dell XPS 9300\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ADIMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4269,7 +4269,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
