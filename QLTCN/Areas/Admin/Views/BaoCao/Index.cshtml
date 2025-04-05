@@ -1,0 +1,208 @@
+﻿@model QLTCCN.Models.ViewModels.BaoCaoViewModel
+
+<h2>Báo cáo tổng quan (Admin)</h2>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Chọn thời gian và người dùng</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mb-2 mr-2">
+                <label for="thang" class="mr-2">Tháng:</label>
+                <select name="thang" id="thang" class="form-control">
+                    @for (int i = 1; i <= 12; i++)
+                    {
+                            <option value="@i" selected="@(i == Model.Thang ? "selected" : null)">@i</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group mb-2 mr-2">
+                <label for="nam" class="mr-2">Năm:</label>
+                <select name="nam" id="nam" class="form-control">
+                    @for (int i = DateTime.Now.Year - 5; i <= DateTime.Now.Year + 5; i++)
+                    {
+                            <option value="@i" selected="@(i == Model.Nam ? "selected" : null)">@i</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group mb-2 mr-2">
+                <label for="userId" class="mr-2">Người dùng:</label>
+                <select name="userId" id="userId" class="form-control">
+                    @foreach (var user in ViewBag.Users)
+                    {
+                            <option value="@user.Id" selected="@(user.Id == ViewBag.SelectedUserId ? "selected" : null)">@user.FullName (@user.Email)</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Xem báo cáo</button>
+        </form>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Tổng quan tài chính - Tháng @Model.Thang/@Model.Nam</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Tổng thu nhập</h5>
+                <p class="text-success">@Model.TongThuNhap.ToString("N0") VNĐ</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Tổng chi tiêu</h5>
+                <p class="text-danger">@Model.TongChiTieu.ToString("N0") VNĐ</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Số tiền tiết kiệm</h5>
+                <p class="@(Model.SoTienTietKiem >= 0 ? "text-success" : "text-danger")">@Model.SoTienTietKiem.ToString("N0") VNĐ</p>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <h5>Nợ phải trả</h5>
+                <p class="text-danger">@Model.NoPhaiTra.ToString("N0") VNĐ</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Lợi nhuận đầu tư</h5>
+                <p class="@(Model.LoiNhuanDauTu >= 0 ? "text-success" : "text-danger")">@Model.LoiNhuanDauTu.ToString("N0") VNĐ</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Biểu đồ -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Biểu đồ thu nhập và chi tiêu</h4>
+            </div>
+            <div class="card-body">
+                <canvas id="thuChiChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Phân bổ chi tiêu theo danh mục</h4>
+            </div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(Model.DanhMucData) && Model.DanhMucData != "[]")
+                {
+                    <canvas id="danhMucChart" style="max-height: 300px;"></canvas>
+                }
+                else
+                {
+                    <p>Chưa có chi tiêu trong tháng này.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tiến độ mục tiêu -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Tiến độ mục tiêu - Tháng @Model.Thang/@Model.Nam</h4>
+    </div>
+    <div class="card-body">
+        @if (Model.TienDoMucTieu.Any())
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Tên mục tiêu</th>
+                        <th>Tiến độ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TienDoMucTieu)
+                    {
+                        <tr>
+                            <td>@item.TenMucTieu</td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: @item.TienDo%;" aria-valuenow="@item.TienDo" aria-valuemin="0" aria-valuemax="100">
+                                        @item.TienDo.ToString("F2")%
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Không có mục tiêu nào trong tháng này.</p>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Biểu đồ 1: Thu nhập và chi tiêu
+        const thuChiData = @Html.Raw(Model.ThuChiData);
+        const thuChiCtx = document.getElementById('thuChiChart').getContext('2d');
+        new Chart(thuChiCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Thu nhập', 'Chi tiêu'],
+                datasets: [{
+                    label: 'Số tiền (VNĐ)',
+                    data: [thuChiData.ThuNhap, thuChiData.ChiTieu],
+                    backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],
+                    borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Số tiền (VNĐ)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Biểu đồ 2: Phân bổ chi tiêu theo danh mục
+        const danhMucLabels = @Html.Raw(Model.DanhMucLabels);
+        const danhMucData = @Html.Raw(Model.DanhMucData);
+        const danhMucColors = @Html.Raw(Model.DanhMucColors);
+
+        if (danhMucData.length > 0) {
+            const danhMucCtx = document.getElementById('danhMucChart').getContext('2d');
+            new Chart(danhMucCtx, {
+                type: 'pie',
+                data: {
+                    labels: danhMucLabels,
+                    datasets: [{
+                        label: 'Chi tiêu (VNĐ)',
+                        data: danhMucData,
+                        backgroundColor: danhMucColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}

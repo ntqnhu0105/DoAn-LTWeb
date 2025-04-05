@@ -1,0 +1,20 @@
+﻿@using Microsoft.EntityFrameworkCore
+@using QLTCCN.Models.Data
+@using System.Security.Claims
+@{
+    var userId = User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+    var thongBaoCount = await (from t in ViewContext.HttpContext.RequestServices.GetService<ApplicationDbContext>().ThongBao
+                               where t.MaNguoiDung == userId && !t.DaDoc
+                               select t).CountAsync();
+}
+
+<li class="nav-item">
+    <a class="nav-link" href="@Url.Action("Index", "ThongBao")">
+        <i class="fas fa-bell"></i>
+        Thông báo
+        @if (thongBaoCount > 0)
+        {
+                <span class="badge badge-danger">@thongBaoCount</span>
+        }
+    </a>
+</li>

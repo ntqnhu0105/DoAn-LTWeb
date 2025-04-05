@@ -1,0 +1,37 @@
+﻿@model QLTCCN.Models.Data.NoKhoanVay
+
+<h2>Lịch sử trả nợ</h2>
+
+<h4>Khoản nợ/vay: @Model.SoTien.ToString("C") (Lãi suất: @Model.LaiSuat%)</h4>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Số tiền trả</th>
+            <th>Ngày trả</th>
+            <th>Ghi chú</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.LichSuTraNos != null && Model.LichSuTraNos.Any())
+        {
+            foreach (var item in Model.LichSuTraNos)
+            {
+                <tr>
+                    <td>@item.SoTienTra.ToString("C")</td>
+                    <td>@item.NgayTra.ToString("dd/MM/yyyy")</td>
+                    <td>@item.GhiChu</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3">Chưa có lịch sử trả nợ.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="ThemTraNo" asp-route-id="@Model.MaNo" class="btn btn-primary">Thêm lần trả nợ</a>
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>

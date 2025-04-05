@@ -1,0 +1,26 @@
+﻿@model List<QLTCCN.Models.Data.LoaiDauTu>
+
+<h2>Danh sách loại đầu tư</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tên loại đầu tư</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TenLoai</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MaLoaiDauTu" class="btn btn-sm btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.MaLoaiDauTu" class="btn btn-sm btn-danger">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Thêm loại đầu tư</a>

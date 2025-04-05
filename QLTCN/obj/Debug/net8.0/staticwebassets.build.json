@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Q4/iI+xnWKJXDK4XbmGU4wrncU9cWvU0Lnguq3kJIbA=",
+  "Hash": "kIGUJVE4OCzSjvxv4VW9S6xeKhPeYI/7Rm1KhXSJsKY=",
   "Source": "QLTCCN",
   "BasePath": "_content/QLTCCN",
   "Mode": "Default",
@@ -31,8 +31,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ApplicationBundle",
-      "Fingerprint": "5w5z8wkns6",
-      "Integrity": "a29MfR1c5kWN/wJTieUQd8DsDh9O0VlVomIoKs+ws8o=",
+      "Fingerprint": "7z1js55we7",
+      "Integrity": "PU9SG3funxybLmRg9WRE0zxVl0XFMGI4iSPXCFi4z4k=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\DoAn-LTWeb\\QLTCN\\obj\\Debug\\net8.0\\scopedcss\\bundle\\QLTCCN.styles.css"
@@ -52,8 +52,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ProjectBundle",
-      "Fingerprint": "5w5z8wkns6",
-      "Integrity": "a29MfR1c5kWN/wJTieUQd8DsDh9O0VlVomIoKs+ws8o=",
+      "Fingerprint": "7z1js55we7",
+      "Integrity": "PU9SG3funxybLmRg9WRE0zxVl0XFMGI4iSPXCFi4z4k=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "D:\\DoAn-LTWeb\\QLTCN\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\QLTCCN.bundle.scp.css"
@@ -6241,7 +6241,7 @@
       ]
     },
     {
-      "Route": "QLTCCN.5w5z8wkns6.bundle.scp.css",
+      "Route": "QLTCCN.7z1js55we7.bundle.scp.css",
       "AssetFile": "D:\\DoAn-LTWeb\\QLTCN\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\QLTCCN.bundle.scp.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -6251,7 +6251,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1124"
+          "Value": "2260"
         },
         {
           "Name": "Content-Type",
@@ -6259,11 +6259,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"a29MfR1c5kWN/wJTieUQd8DsDh9O0VlVomIoKs+ws8o=\""
+          "Value": "\"PU9SG3funxybLmRg9WRE0zxVl0XFMGI4iSPXCFi4z4k=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 03 Apr 2025 08:57:53 GMT"
+          "Value": "Sat, 05 Apr 2025 13:14:03 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6273,7 +6273,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "5w5z8wkns6"
+          "Value": "7z1js55we7"
         },
         {
           "Name": "label",
@@ -6281,12 +6281,12 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-a29MfR1c5kWN/wJTieUQd8DsDh9O0VlVomIoKs+ws8o="
+          "Value": "sha256-PU9SG3funxybLmRg9WRE0zxVl0XFMGI4iSPXCFi4z4k="
         }
       ]
     },
     {
-      "Route": "QLTCCN.5w5z8wkns6.styles.css",
+      "Route": "QLTCCN.7z1js55we7.styles.css",
       "AssetFile": "D:\\DoAn-LTWeb\\QLTCN\\obj\\Debug\\net8.0\\scopedcss\\bundle\\QLTCCN.styles.css",
       "Selectors": [],
       "ResponseHeaders": [
@@ -6296,7 +6296,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1124"
+          "Value": "2260"
         },
         {
           "Name": "Content-Type",
@@ -6304,11 +6304,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"a29MfR1c5kWN/wJTieUQd8DsDh9O0VlVomIoKs+ws8o=\""
+          "Value": "\"PU9SG3funxybLmRg9WRE0zxVl0XFMGI4iSPXCFi4z4k=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 03 Apr 2025 08:57:53 GMT"
+          "Value": "Sat, 05 Apr 2025 13:14:03 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6318,7 +6318,7 @@
       "EndpointProperties": [
         {
           "Name": "fingerprint",
-          "Value": "5w5z8wkns6"
+          "Value": "7z1js55we7"
         },
         {
           "Name": "label",
@@ -6326,7 +6326,7 @@
         },
         {
           "Name": "integrity",
-          "Value": "sha256-a29MfR1c5kWN/wJTieUQd8DsDh9O0VlVomIoKs+ws8o="
+          "Value": "sha256-PU9SG3funxybLmRg9WRE0zxVl0XFMGI4iSPXCFi4z4k="
         }
       ]
     },
@@ -6341,7 +6341,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1124"
+          "Value": "2260"
         },
         {
           "Name": "Content-Type",
@@ -6349,11 +6349,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"a29MfR1c5kWN/wJTieUQd8DsDh9O0VlVomIoKs+ws8o=\""
+          "Value": "\"PU9SG3funxybLmRg9WRE0zxVl0XFMGI4iSPXCFi4z4k=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 03 Apr 2025 08:57:53 GMT"
+          "Value": "Sat, 05 Apr 2025 13:14:03 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6363,7 +6363,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-a29MfR1c5kWN/wJTieUQd8DsDh9O0VlVomIoKs+ws8o="
+          "Value": "sha256-PU9SG3funxybLmRg9WRE0zxVl0XFMGI4iSPXCFi4z4k="
         }
       ]
     },
@@ -6378,7 +6378,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "1124"
+          "Value": "2260"
         },
         {
           "Name": "Content-Type",
@@ -6386,11 +6386,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"a29MfR1c5kWN/wJTieUQd8DsDh9O0VlVomIoKs+ws8o=\""
+          "Value": "\"PU9SG3funxybLmRg9WRE0zxVl0XFMGI4iSPXCFi4z4k=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 03 Apr 2025 08:57:53 GMT"
+          "Value": "Sat, 05 Apr 2025 13:14:03 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -6400,7 +6400,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-a29MfR1c5kWN/wJTieUQd8DsDh9O0VlVomIoKs+ws8o="
+          "Value": "sha256-PU9SG3funxybLmRg9WRE0zxVl0XFMGI4iSPXCFi4z4k="
         }
       ]
     }

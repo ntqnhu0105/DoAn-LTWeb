@@ -1,0 +1,40 @@
+﻿@model List<QLTCCN.Models.Data.GiaoDich>
+
+<h2>Danh sách giao dịch (Admin)</h2>
+
+@if (Model.Any())
+{
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ngày giao dịch</th>
+                    <th>Loại giao dịch</th>
+                    <th>Số tiền</th>
+                    <th>Danh mục</th>
+                    <th>Tài khoản</th>
+                    <th>Người dùng</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
+                        <tr>
+                            <td>@item.NgayGiaoDich.ToString("dd/MM/yyyy")</td>
+                            <td>@item.LoaiGiaoDich</td>
+                            <td>@item.SoTien.ToString("C")</td>
+                            <td>@item.DanhMuc?.TenDanhMuc</td>
+                            <td>@item.TaiKhoan?.TenTaiKhoan</td>
+                            <td>@item.NguoiDung?.FullName (@item.NguoiDung?.Email)</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.MaGiaoDich" class="btn btn-sm btn-info">Chi tiết</a>
+                            </td>
+                        </tr>
+            }
+            </tbody>
+        </table>
+}
+else
+{
+        <p>Không có giao dịch nào.</p>
+}

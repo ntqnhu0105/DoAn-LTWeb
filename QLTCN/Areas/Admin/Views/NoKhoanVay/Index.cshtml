@@ -1,0 +1,42 @@
+﻿@model List<QLTCCN.Models.Data.NoKhoanVay>
+
+<h2>Danh sách nợ/khoản vay (Admin)</h2>
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tên khoản vay</th>
+                <th>Số tiền</th>
+                <th>Lãi suất</th>
+                <th>Kỳ hạn</th>
+                <th>Ngày bắt đầu</th>
+                <th>Trạng thái</th>
+                <th>Người dùng</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.GhiChu</td>
+                    <td>@item.SoTien.ToString("C")</td>
+                    <td>@item.LaiSuat%</td>
+                    <td>@item.KyHan tháng</td>
+                    <td>@item.NgayBatDau.ToString("dd/MM/yyyy")</td>
+                    <td>@item.TrangThai</td>
+                    <td>@item.NguoiDung?.FullName (@item.NguoiDung?.Email)</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.MaNo" class="btn btn-sm btn-info">Chi tiết</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Không có khoản vay nào.</p>
+}

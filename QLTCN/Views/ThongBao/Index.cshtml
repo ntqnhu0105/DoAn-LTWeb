@@ -1,0 +1,54 @@
+﻿@model List<QLTCCN.Models.Data.ThongBao>
+
+<h2>Danh sách thông báo</h2>
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Loại</th>
+                <th>Nội dung</th>
+                <th>Ngày</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @switch (item.Loai)
+                        {
+                            case "Nhắc nhở":
+                                <span class="badge badge-info">@item.Loai</span>
+                                break;
+                            case "Cảnh báo":
+                                <span class="badge badge-warning">@item.Loai</span>
+                                break;
+                            case "Cập nhật":
+                                <span class="badge badge-success">@item.Loai</span>
+                                break;
+                            default:
+                                <span class="badge badge-secondary">@item.Loai</span>
+                                break;
+                        }
+                    </td>
+                    <td>@item.NoiDung</td>
+                    <td>@item.Ngay.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        <form asp-action="MarkAsRead" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@item.MaThongBao" />
+                            <button type="submit" class="btn btn-sm btn-primary">Đánh dấu đã đọc</button>
+                        </form>
+                        <a asp-action="Delete" asp-route-id="@item.MaThongBao" class="btn btn-sm btn-danger">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Không có thông báo nào.</p>
+}

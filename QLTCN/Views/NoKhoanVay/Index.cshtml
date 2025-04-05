@@ -1,0 +1,42 @@
+﻿@model List<QLTCCN.Models.Data.NoKhoanVay>
+
+<h2>Danh sách khoản nợ/vay</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Số tiền</th>
+            <th>Lãi suất</th>
+            <th>Kỳ hạn (tháng)</th>
+            <th>Ngày bắt đầu</th>
+            <th>Ngày kết thúc</th>
+            <th>Trạng thái</th>
+            <th>Ngày trả tiếp theo</th>
+            <th>Ghi chú</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.SoTien.ToString("C")</td>
+                <td>@item.LaiSuat%</td>
+                <td>@item.KyHan</td>
+                <td>@item.NgayBatDau.ToString("dd/MM/yyyy")</td>
+                <td>@(item.NgayKetThuc.HasValue ? item.NgayKetThuc.Value.ToString("dd/MM/yyyy") : "Chưa kết thúc")</td>
+                <td>@item.TrangThai</td>
+                <td>@(item.NgayTraTiepTheo.HasValue ? item.NgayTraTiepTheo.Value.ToString("dd/MM/yyyy") : "N/A")</td>
+                <td>@item.GhiChu</td>
+                <td>
+                    <a asp-action="ChiTiet" asp-route-id="@item.MaNo" class="btn btn-sm btn-primary">Chi tiết</a>
+                    <a asp-action="Edit" asp-route-id="@item.MaNo" class="btn btn-sm btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.MaNo" class="btn btn-sm btn-danger">Xóa</a>
+                    <a asp-action="LichSuTraNo" asp-route-id="@item.MaNo" class="btn btn-sm btn-info">Lịch sử trả nợ</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Thêm khoản nợ/vay</a>
