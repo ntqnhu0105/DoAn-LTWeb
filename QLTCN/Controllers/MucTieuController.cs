@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 namespace QLTCCN.Controllers
 {
     [Authorize]
-    public class MucTieuController : Controller
+    public class MucTieuController : BaseController
     {
         private readonly ApplicationDbContext _context;
 
-        public MucTieuController(ApplicationDbContext context)
+        public MucTieuController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }

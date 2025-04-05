@@ -1,0 +1,33 @@
+﻿@model List<QLTCCN.Models.Data.MucTieu>
+
+<h2>Danh sách mục tiêu (Admin)</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Tên mục tiêu</th>
+            <th>Số tiền mục tiêu</th>
+            <th>Số tiền hiện tại</th>
+            <th>Hạn chót</th>
+            <th>Trạng thái</th>
+            <th>Người dùng</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.TenMucTieu</td>
+                <td>@item.SoTienMucTieu.ToString("C")</td>
+                <td>@item.SoTienHienTai.ToString("C")</td>
+                <td>@item.HanChot.ToString("dd/MM/yyyy")</td>
+                <td>@item.TrangThai</td>
+                <td>@item.NguoiDung?.FullName (@item.NguoiDung?.Email)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.MaMucTieu" class="btn btn-sm btn-info">Chi tiết</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

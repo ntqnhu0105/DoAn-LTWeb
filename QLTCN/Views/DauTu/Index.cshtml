@@ -1,0 +1,143 @@
+﻿@model List<QLTCCN.Models.Data.DauTu>
+
+<h2>Danh sách đầu tư</h2>
+
+<!-- Form bộ lọc -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Bộ lọc</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="form-inline">
+            <div class="form-group mb-2 mr-2">
+                <label for="startDate" class="mr-2">Từ ngày:</label>
+                <input type="date" name="startDate" id="startDate" class="form-control" value="@ViewBag.StartDate" />
+            </div>
+            <div class="form-group mb-2 mr-2">
+                <label for="endDate" class="mr-2">Đến ngày:</label>
+                <input type="date" name="endDate" id="endDate" class="form-control" value="@ViewBag.EndDate" />
+            </div>
+            <div class="form-group mb-2 mr-2">
+                <label for="maLoaiDauTu" class="mr-2">Loại đầu tư:</label>
+                <select name="maLoaiDauTu" id="maLoaiDauTu" class="form-control">
+                    <option value="">Tất cả</option>
+                    @foreach (var item in ViewBag.LoaiDauTuList)
+                    {
+                        <option value="@item.Value" selected="@(item.Value == ViewBag.MaLoaiDauTu?.ToString() ? "selected" : null)">@item.Text</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Lọc</button>
+            <a asp-action="Index" class="btn btn-secondary mb-2 ml-2">Xóa bộ lọc</a>
+        </form>
+    </div>
+</div>
+
+<!-- Biểu đồ lợi nhuận -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Biểu đồ lợi nhuận/lỗ</h4>
+    </div>
+    <div class="card-body">
+        @if (Model.Any())
+        {
+            <canvas id="loiNhuanChart" style="max-height: 400px;"></canvas>
+        }
+        else
+        {
+            <p>Chưa có khoản đầu tư nào để hiển thị biểu đồ.</p>
+        }
+    </div>
+</div>
+
+<!-- Danh sách đầu tư -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Loại đầu tư</th>
+            <th>Giá trị ban đầu</th>
+            <th>Giá trị hiện tại</th>
+            <th>Lợi nhuận/Lỗ</th>
+            <th>Ngày đầu tư</th>
+            <th>Ngày kết thúc</th>
+            <th>Trạng thái</th>
+            <th>Ghi chú</th>
+            <th>Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.LoaiDauTu?.TenLoai</td>
+                <td>@item.GiaTri.ToString("C")</td>
+                    <td>@item.GiaTriHienTai.ToString("C")</td>
+                <td>
+                    @{
+                        var loiNhuan = item.GiaTriHienTai - item.GiaTri;
+                        var mau = loiNhuan >= 0 ? "text-success" : "text-danger";
+                    }
+                        <span class="@mau">@loiNhuan.ToString("C")</span>
+                </td>
+                <td>@item.Ngay.ToString("dd/MM/yyyy")</td>
+                <td>@(item.NgayKetThuc.HasValue ? item.NgayKetThuc.Value.ToString("dd/MM/yyyy") : "Chưa kết thúc")</td>
+                <td>@item.TrangThai</td>
+                <td>@item.GhiChu</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MaDauTu" class="btn btn-sm btn-warning">Sửa</a>
+                    <a asp-action="Delete" asp-route-id="@item.MaDauTu" class="btn btn-sm btn-danger">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Thêm đầu tư</a>
+
+@section Scripts {
+    <script>
+        // Lấy dữ liệu từ ViewBag
+        const labels = @Html.Raw(ViewBag.Labels);
+        const loiNhuanData = @Html.Raw(ViewBag.LoiNhuanData);
+        const colors = @Html.Raw(ViewBag.Colors);
+
+        // Vẽ biểu đồ
+        const ctx = document.getElementById('loiNhuanChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Lợi nhuận/Lỗ (VNĐ)',
+                    data: loiNhuanData,
+                    backgroundColor: colors,
+                    borderColor: colors.map(color => color.replace('0.6', '1')),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Lợi nhuận/Lỗ (VNĐ)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Khoản đầu tư'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                }
+            }
+        });
+    </script>
+}

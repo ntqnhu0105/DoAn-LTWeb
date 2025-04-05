@@ -1,0 +1,37 @@
+﻿@model QLTCCN.Models.Data.LichSuTraNo
+
+<h2>Thêm lần trả nợ</h2>
+
+<form asp-action="ThemTraNo" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="MaNo" />
+
+    <div class="form-group">
+        <label asp-for="SoTienTra" class="control-label">Số tiền trả</label>
+        <input asp-for="SoTienTra" class="form-control" type="number" step="0.01" required />
+        <span asp-validation-for="SoTienTra" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NgayTra" class="control-label">Ngày trả</label>
+        <input asp-for="NgayTra" class="form-control" type="date" value="@Model.NgayTra.ToString("yyyy-MM-dd")" required />
+        <span asp-validation-for="NgayTra" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="GhiChu" class="control-label">Ghi chú</label>
+        <input asp-for="GhiChu" class="form-control" />
+        <span asp-validation-for="GhiChu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Thêm</button>
+        <a asp-action="LichSuTraNo" asp-route-id="@Model.MaNo" class="btn btn-secondary">Quay lại</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

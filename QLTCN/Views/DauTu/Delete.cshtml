@@ -1,0 +1,30 @@
+﻿@model QLTCCN.Models.Data.DauTu
+
+<h2>Xóa đầu tư</h2>
+
+<h3>Bạn có chắc chắn muốn xóa khoản đầu tư này?</h3>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Loại đầu tư</dt>
+        <dd class="col-sm-10">@Model.LoaiDauTu?.TenLoai</dd>
+
+        <dt class="col-sm-2">Giá trị ban đầu</dt>
+        <dd class="col-sm-10">@Model.GiaTri.ToString("C")</dd>
+
+        <dt class="col-sm-2">Giá trị hiện tại</dt>
+        <dd class="col-sm-10">@Model.GiaTriHienTai.ToString("C")</dd>
+
+        <dt class="col-sm-2">Ngày đầu tư</dt>
+        <dd class="col-sm-10">@Model.Ngay.ToString("dd/MM/yyyy")</dd>
+
+        <dt class="col-sm-2">Trạng thái</dt>
+        <dd class="col-sm-10">@Model.TrangThai</dd>
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="MaDauTu" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </form>
+</div>

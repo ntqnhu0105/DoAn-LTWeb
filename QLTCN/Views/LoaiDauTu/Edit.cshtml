@@ -1,0 +1,25 @@
+﻿@model QLTCCN.Models.Data.LoaiDauTu
+
+<h2>Sửa loại đầu tư</h2>
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="MaLoaiDauTu" />
+
+    <div class="form-group">
+        <label asp-for="TenLoai" class="control-label">Tên loại đầu tư</label>
+        <input asp-for="TenLoai" class="form-control" required />
+        <span asp-validation-for="TenLoai" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Cập nhật</button>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

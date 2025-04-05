@@ -1,0 +1,33 @@
+﻿@model QLTCCN.Models.Data.MucTieu
+
+<h2>Chi tiết mục tiêu</h2>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Tên mục tiêu</dt>
+        <dd class="col-sm-10">@Model.TenMucTieu</dd>
+
+        <dt class="col-sm-2">Số tiền mục tiêu</dt>
+        <dd class="col-sm-10">@Model.SoTienMucTieu.ToString("C")</dd>
+
+        <dt class="col-sm-2">Số tiền hiện tại</dt>
+        <dd class="col-sm-10">@Model.SoTienHienTai.ToString("C")</dd>
+
+        <dt class="col-sm-2">Hạn chót</dt>
+        <dd class="col-sm-10">@Model.HanChot.ToString("dd/MM/yyyy")</dd>
+
+        <dt class="col-sm-2">Trạng thái</dt>
+        <dd class="col-sm-10">@Model.TrangThai</dd>
+
+        <dt class="col-sm-2">Danh mục</dt>
+        <dd class="col-sm-10">@Model.DanhMuc?.TenDanhMuc</dd>
+
+        <dt class="col-sm-2">Người dùng</dt>
+        <dd class="col-sm-10">@Model.NguoiDung?.FullName (@Model.NguoiDung?.Email)</dd>
+
+        <dt class="col-sm-2">Ghi chú</dt>
+        <dd class="col-sm-10">@Model.GhiChu</dd>
+    </dl>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>
