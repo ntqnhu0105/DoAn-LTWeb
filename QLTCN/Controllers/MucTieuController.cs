@@ -283,5 +283,22 @@ namespace QLTCCN.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> Progress()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var mucTieu = await _context.MucTieu
+                .Where(m => m.MaNguoiDung == userId && m.TrangThai == "DangTienHanh")
+                .ToListAsync();
+
+            var labels = mucTieu.Select(m => m.TenMucTieu).ToList();
+            var tienDo = mucTieu.Select(m => m.SoTienMucTieu > 0 ? (double)(m.SoTienHienTai / m.SoTienMucTieu * 100) : 0).ToList();
+            var colors = tienDo.Select(t => t >= 100 ? "rgba(75, 192, 192, 0.6)" : "rgba(255, 99, 132, 0.6)").ToList();
+
+            ViewBag.Labels = System.Text.Json.JsonSerializer.Serialize(labels);
+            ViewBag.TienDo = System.Text.Json.JsonSerializer.Serialize(tienDo);
+            ViewBag.Colors = System.Text.Json.JsonSerializer.Serialize(colors);
+
+            return View(mucTieu);
+        }
     }
 }

@@ -1,0 +1,73 @@
+﻿@model List<QLTCCN.Models.Data.MucTieu>
+
+<h2>Theo dõi tiến độ mục tiêu</h2>
+
+@if (Model.Any())
+{
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>Biểu đồ tiến độ</h4>
+        </div>
+        <div class="card-body">
+            <canvas id="tienDoChart" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tên mục tiêu</th>
+                <th>Số tiền mục tiêu</th>
+                <th>Số tiền hiện tại</th>
+                <th>Tiến độ</th>
+                <th>Hạn chót</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.TenMucTieu</td>
+                    <td>@item.SoTienMucTieu.ToString("C")</td>
+                    <td>@item.SoTienHienTai.ToString("C")</td>
+                    <td>@(item.SoTienMucTieu > 0 ? (item.SoTienHienTai / item.SoTienMucTieu * 100).ToString("F2") : "0")%</td>
+                    <td>@item.HanChot.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('tienDoChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: @Html.Raw(ViewBag.Labels),
+                    datasets: [{
+                        label: 'Tiến độ (%)',
+                        data: @Html.Raw(ViewBag.TienDo),
+                        backgroundColor: @Html.Raw(ViewBag.Colors),
+                        borderColor: @Html.Raw(ViewBag.Colors),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}
+else
+{
+    <p>Bạn chưa có mục tiêu nào đang tiến hành.</p>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Quay lại</a>
