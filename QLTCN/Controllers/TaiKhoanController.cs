@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using QLTCCN.Models.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using QLTCCN.Services;
 
 namespace QLTCCN.Controllers
 {
@@ -11,19 +13,27 @@ namespace QLTCCN.Controllers
     public class TaiKhoanController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SurvivalModeService _survivalModeService;
 
-        public TaiKhoanController(ApplicationDbContext context)
+        public TaiKhoanController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, SurvivalModeService survivalModeService)
         {
             _context = context;
+            _userManager = userManager;
+            _survivalModeService = survivalModeService;
         }
 
         // GET: TaiKhoan/Index - Hiển thị danh sách tài khoản
         public async Task<IActionResult> Index()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var taiKhoans = await _context.TaiKhoan
                 .Where(t => t.MaNguoiDung == userId)
                 .ToListAsync();
+            await _survivalModeService.CheckSurvivalModeAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
+            ViewBag.SurvivalMode = user?.SurvivalMode ?? false;
 
             return View(taiKhoans);
         }
@@ -41,8 +51,7 @@ namespace QLTCCN.Controllers
                     new { Value = "Ngân hàng", Text = "Ngân hàng" },
                     new { Value = "Ví điện tử", Text = "Ví điện tử" }
                 },
-                "Value",
-                "Text"
+                "Value", "Text"
             );
 
             return View();
@@ -69,6 +78,7 @@ namespace QLTCCN.Controllers
                 {
                     _context.TaiKhoan.Add(taiKhoan);
                     await _context.SaveChangesAsync();
+                    await _survivalModeService.CheckSurvivalModeAsync(userId);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
@@ -88,6 +98,37 @@ namespace QLTCCN.Controllers
             ViewBag.LoaiTaiKhoan = new SelectList(
                 new[]
                 {
+                    new { Value = "Tiền mặt", Text = "Tiền mặt" },
+                    new { Value = "Thẻ tín dụng", Text = "Thẻ tín dụng" },
+                    new { Value = "Ngân hàng", Text = "Ngân hàng" },
+                    new { Value = "Ví điện tử", Text = "Ví điện tử" }
+                },
+                "Value", "Text", taiKhoan.LoaiTaiKhoan
+            );
+
+            return View(taiKhoan);
+        }
+
+        // GET: TaiKhoan/Edit/5 - Hiển thị form sửa tài khoản
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Lấy ID người dùng
+            var taiKhoan = await _context.TaiKhoan
+                .FirstOrDefaultAsync(t => t.MaTaiKhoan == id && t.MaNguoiDung == userId);
+
+            if (taiKhoan == null)
+            {
+                return NotFound();
+            }
+
+            // Gán lại MaNguoiDung từ userId nếu cần
+            taiKhoan.MaNguoiDung = userId;
+
+            // Cập nhật danh sách loại tài khoản cho dropdown
+            ViewBag.LoaiTaiKhoan = new SelectList(
+                new[]
+                {
             new { Value = "Tiền mặt", Text = "Tiền mặt" },
             new { Value = "Thẻ tín dụng", Text = "Thẻ tín dụng" },
             new { Value = "Ngân hàng", Text = "Ngân hàng" },
@@ -100,34 +141,7 @@ namespace QLTCCN.Controllers
 
             return View(taiKhoan);
         }
-        // GET: TaiKhoan/Edit/5 - Hiển thị form sửa tài khoản
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var taiKhoan = await _context.TaiKhoan
-                .FirstOrDefaultAsync(t => t.MaTaiKhoan == id && t.MaNguoiDung == userId);
 
-            if (taiKhoan == null)
-            {
-                return NotFound();
-            }
-
-            ViewBag.LoaiTaiKhoan = new SelectList(
-                new[]
-                {
-                    new { Value = "Tiền mặt", Text = "Tiền mặt" },
-                    new { Value = "Thẻ tín dụng", Text = "Thẻ tín dụng" },
-                    new { Value = "Ngân hàng", Text = "Ngân hàng" },
-                    new { Value = "Ví điện tử", Text = "Ví điện tử" }
-                },
-                "Value",
-                "Text",
-                taiKhoan.LoaiTaiKhoan
-            );
-
-            return View(taiKhoan);
-        }
 
         // POST: TaiKhoan/Edit/5 - Cập nhật tài khoản
         [HttpPost]
@@ -139,9 +153,11 @@ namespace QLTCCN.Controllers
                 return NotFound();
             }
 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Lấy ID người dùng
+            taiKhoan.MaNguoiDung = userId; // Gán MaNguoiDung từ userId
+
             if (ModelState.IsValid)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var existingTaiKhoan = await _context.TaiKhoan
                     .FirstOrDefaultAsync(t => t.MaTaiKhoan == id && t.MaNguoiDung == userId);
 
@@ -150,22 +166,25 @@ namespace QLTCCN.Controllers
                     return NotFound();
                 }
 
+                // Cập nhật các trường cần thiết
                 existingTaiKhoan.TenTaiKhoan = taiKhoan.TenTaiKhoan;
                 existingTaiKhoan.SoDu = taiKhoan.SoDu;
                 existingTaiKhoan.LoaiTaiKhoan = taiKhoan.LoaiTaiKhoan;
 
                 _context.TaiKhoan.Update(existingTaiKhoan);
                 await _context.SaveChangesAsync();
+                await _survivalModeService.CheckSurvivalModeAsync(userId);
                 return RedirectToAction(nameof(Index));
             }
 
+            // Cập nhật lại dropdown LoaiTaiKhoan nếu có lỗi
             ViewBag.LoaiTaiKhoan = new SelectList(
                 new[]
                 {
-                    new { Value = "Tiền mặt", Text = "Tiền mặt" },
-                    new { Value = "Thẻ tín dụng", Text = "Thẻ tín dụng" },
-                    new { Value = "Ngân hàng", Text = "Ngân hàng" },
-                    new { Value = "Ví điện tử", Text = "Ví điện tử" }
+            new { Value = "Tiền mặt", Text = "Tiền mặt" },
+            new { Value = "Thẻ tín dụng", Text = "Thẻ tín dụng" },
+            new { Value = "Ngân hàng", Text = "Ngân hàng" },
+            new { Value = "Ví điện tử", Text = "Ví điện tử" }
                 },
                 "Value",
                 "Text",
@@ -174,6 +193,7 @@ namespace QLTCCN.Controllers
 
             return View(taiKhoan);
         }
+
 
         // GET: TaiKhoan/Delete/5 - Hiển thị xác nhận xóa tài khoản
         [HttpGet]
@@ -204,6 +224,7 @@ namespace QLTCCN.Controllers
             {
                 _context.TaiKhoan.Remove(taiKhoan);
                 await _context.SaveChangesAsync();
+                await _survivalModeService.CheckSurvivalModeAsync(userId);
             }
 
             return RedirectToAction(nameof(Index));

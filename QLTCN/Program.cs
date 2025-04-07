@@ -21,6 +21,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
+builder.Services.AddScoped<SurvivalModeService>();
 builder.Services.AddHttpClient<IExchangeRateService, ExchangeRateService>();
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {

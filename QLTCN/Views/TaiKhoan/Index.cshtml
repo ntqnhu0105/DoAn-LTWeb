@@ -1,6 +1,14 @@
 ﻿@model IEnumerable<QLTCCN.Models.Data.TaiKhoan>
-
 <h2>Danh sách tài khoản</h2>
+
+@if (ViewBag.SurvivalMode == true)
+{
+    <div class="alert alert-warning">
+        ⚠️ <strong>Chế độ sinh tồn đang được kích hoạt!</strong> <br />
+        Số dư hiện tại của bạn thấp hơn ngưỡng cho phép. Hãy hạn chế chi tiêu cho đến kỳ lương tiếp theo.
+    </div>
+}
+
 <p><a asp-action="Create" class="btn btn-primary">Thêm tài khoản mới</a></p>
 
 <table class="table">
@@ -16,16 +24,16 @@
     <tbody>
         @foreach (var item in Model)
         {
-                <tr>
-                    <td>@item.TenTaiKhoan</td>
-                    <td>@item.SoDu.ToString("C")</td>
-                    <td>@item.LoaiTaiKhoan</td>
-                    <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.MaTaiKhoan">Sửa</a> |
-                        <a asp-action="Delete" asp-route-id="@item.MaTaiKhoan">Xóa</a>
-                    </td>
-                </tr>
+            <tr>
+                <td>@item.TenTaiKhoan</td>
+                <td>@item.SoDu.ToString("C")</td>
+                <td>@item.LoaiTaiKhoan</td>
+                <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MaTaiKhoan">Sửa</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MaTaiKhoan">Xóa</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
