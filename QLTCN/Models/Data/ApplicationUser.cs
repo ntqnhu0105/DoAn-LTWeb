@@ -11,5 +11,8 @@ namespace QLTCCN.Models.Data
         public ICollection<NoKhoanVay> NoKhoanVays { get; set; }
         public ICollection<ThongBao> ThongBaos { get; set; }
         public ICollection<DauTu> DauTus { get; set; }
+        public decimal SoDu { get; set; }
+        public bool SurvivalMode { get; set; } = false;
+        public DateTime? SurvivalModeStartDate { get; set; }
     }
 }

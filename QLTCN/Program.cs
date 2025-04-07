@@ -3,6 +3,7 @@ using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using QLTCCN.Models.Data;
 using Microsoft.AspNetCore.Identity;
+using QLTCCN.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
+builder.Services.AddScoped<SurvivalModeService>();
+builder.Services.AddHttpClient<IExchangeRateService, ExchangeRateService>();
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
     var cultureInfo = new CultureInfo("vi-VN"); // Định dạng Việt Nam
