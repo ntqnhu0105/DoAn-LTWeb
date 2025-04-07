@@ -1,0 +1,47 @@
+﻿@using QLTCCN.Services
+<h2>Tỷ giá ngoại tệ</h2>
+
+@if (ViewBag.Error != null)
+{
+        <div class="alert alert-danger">@ViewBag.Error</div>
+}
+else
+{
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Tỷ giá so với @ViewBag.BaseCurrency</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Index" method="get" class="form-inline mb-3">
+                    <label for="baseCurrency" class="mr-2">Chọn tiền tệ gốc:</label>
+                    <select name="baseCurrency" id="baseCurrency" class="form-control mr-2">
+                    @foreach (var currency in ViewBag.Currencies)
+                    {
+                                <option value="@currency" selected="@(currency == ViewBag.BaseCurrency ? "selected" : null)">@currency</option>
+                    }
+                    </select>
+                    <button type="submit" class="btn btn-primary">Xem tỷ giá</button>
+                </form>
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tiền tệ</th>
+                            <th>Tỷ giá (@ViewBag.BaseCurrency)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var rate in ViewBag.Rates)
+                    {
+                                <tr>
+                                    <td>@rate.Key</td>
+                                    <td>@rate.Value.ToString("N4")</td>
+                                </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+}
+
+<a asp-action="Convert" class="btn btn-success">Chuyển đổi tiền tệ</a>

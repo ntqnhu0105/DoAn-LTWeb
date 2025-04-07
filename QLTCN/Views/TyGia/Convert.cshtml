@@ -1,0 +1,46 @@
+﻿
+<h2>Chuyển đổi tiền tệ</h2>
+
+@if (ViewBag.Error != null)
+{
+        <div class="alert alert-danger">@ViewBag.Error</div>
+}
+
+@if (ViewBag.Result != null)
+{
+        <div class="alert alert-success">@ViewBag.Result</div>
+}
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>Chuyển đổi tiền tệ</h4>
+    </div>
+    <div class="card-body">
+        <form asp-action="Convert" method="post">
+            <div class="form-group">
+                <label for="fromCurrency">Từ tiền tệ:</label>
+                <select name="fromCurrency" id="fromCurrency" class="form-control">
+                    @foreach (var currency in ViewBag.Currencies)
+                    {
+                            <option value="@currency">@currency</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="toCurrency">Sang tiền tệ:</label>
+                <select name="toCurrency" id="toCurrency" class="form-control">
+                    @foreach (var currency in ViewBag.Currencies)
+                    {
+                            <option value="@currency" selected="@(currency == "VND" ? "selected" : null)">@currency</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="amount">Số tiền:</label>
+                <input type="number" name="amount" id="amount" class="form-control" step="0.01" min="0" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Chuyển đổi</button>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>
