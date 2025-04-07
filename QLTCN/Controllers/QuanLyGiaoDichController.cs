@@ -148,24 +148,35 @@ namespace QLTCCN.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var mucTieu = await _context.MucTieu
-                .FirstOrDefaultAsync(m => m.MaMucTieu == id && m.MaNguoiDung == userId);
+            var giaoDich = await _context.GiaoDich
+                .FirstOrDefaultAsync(g => g.MaGiaoDich == id && g.MaNguoiDung == userId);
 
-            if (mucTieu == null)
+            if (giaoDich == null)
             {
                 return NotFound();
             }
 
-            // Debug giá trị
-            Console.WriteLine($"MaMucTieu: {mucTieu.MaMucTieu}");
-            Console.WriteLine($"TenMucTieu: {mucTieu.TenMucTieu}");
-            Console.WriteLine($"SoTienMucTieu: {mucTieu.SoTienMucTieu}");
-            Console.WriteLine($"SoTienHienTai: {mucTieu.SoTienHienTai}");
-            Console.WriteLine($"MaDanhMuc: {mucTieu.MaDanhMuc}");
-            Console.WriteLine($"HanChot: {mucTieu.HanChot}");
+            ViewBag.DanhMuc = new SelectList(_context.DanhMuc, "MaDanhMuc", "TenDanhMuc", giaoDich.MaDanhMuc);
+            ViewBag.TaiKhoan = new SelectList(
+                _context.TaiKhoan
+                    .Where(t => t.MaNguoiDung == userId)
+                    .Select(t => new { t.MaTaiKhoan, Ten = $"{t.TenTaiKhoan} ({t.LoaiTaiKhoan})" }),
+                "MaTaiKhoan",
+                "Ten",
+                giaoDich.MaTaiKhoan
+            );
+            ViewBag.LoaiGiaoDich = new SelectList(
+                new[]
+                {
+            new { Value = "ThuNhap", Text = "Thu nhập" },
+            new { Value = "ChiTieu", Text = "Chi tiêu" }
+                },
+                "Value",
+                "Text",
+                giaoDich.LoaiGiaoDich
+            );
 
-            ViewBag.DanhMuc = new SelectList(_context.DanhMuc, "MaDanhMuc", "TenDanhMuc", mucTieu.MaDanhMuc);
-            return View(mucTieu);
+            return View(giaoDich);
         }
 
         // POST: Transaction/Edit/5 - Cập nhật giao dịch
